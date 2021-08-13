@@ -1,0 +1,51 @@
+---
+title: "Integrative analysis of metabolome and microbiome"
+author: "Congcong Gong"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Integrative analysis of metabolome and microbiome}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  tidy = FALSE,
+  warning = FALSE,
+  message = FALSE
+)
+library(data.table, quietly = TRUE)
+library(mbOmic)
+```
+
+```{r}
+# path <- system.file('data',package = 'mbOmic')
+path <- "../data"
+b <- readxl::read_xlsx(file.path(path,
+                                 '41598_2021_85433_MOESM2_ESM.xlsx'), 
+                         sheet = 'Table S2',skip = 1)
+m <- readxl::read_xlsx(file.path(path,
+                                 '41598_2021_85433_MOESM2_ESM.xlsx'), 
+                        sheet = 'Table S4',skip = 1)
+setDT(b)
+setDT(m)
+
+cn <- c('Name_des',grep(x = names(m), 'BS|SS.*', value = TRUE))
+m <- m[,..cn]
+
+object <-
+  mbSet(
+      m = m,
+    b = b
+  )
+
+res <- cor.test(object, parallel =  FALSE, method = 'spearman',ncore = 5)
+net <- wgcna(object,group = 't',minN = 2, power = 9,message = FALSE)
+
+plot_network(net, res[abs(rho)>=0.85])
+```
+
+

@@ -1,0 +1,15 @@
+* installing *source* package ‘mbOmic’ ...
+** using staged installation
+** R
+** data
+*** moving datasets to lazyload DB
+** byte-compile and prepare package for lazy loading
+Creating a new generic function for ‘cor.test’ in package ‘mbOmic’
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (mbOmic)

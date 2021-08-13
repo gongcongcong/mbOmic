@@ -1,0 +1,19 @@
+b.extra                 b.extra
+check_mbSet             check_mbSet
+cor.test                cor.test
+cor2df                  cor2df
+m.extra                 m.extra
+m.filter                test the metabolite profile
+mb.cor-class            mb.cor
+mbSet                   An S4 class to represent a bank account.
+nb.extra                nb
+nm.extra                nm
+pickST                  Automatic network construction and module
+                        detection by one-step method
+plot_network            plot network
+print.mb.module         print.mb.module
+print.mbSet             print
+samples.extra           samples
+show,mbSet-method       show
+wgcna                   wgcna
+wgcna,mbSet-method      wgcna
