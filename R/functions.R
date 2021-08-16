@@ -174,12 +174,12 @@ pickST <-
                                                      R^2)
                              ),
                              main = "Scale independence",
-                             ylim = c(-1,1)
+                             ylim = c(-2,1)
                         )
                         points(res, sft[res], pch = 16, col = 'darkred')
                         text(res, sft[res]-0.1, labels = res, col = 'red')
-                        text(1,threshold+0.1,labels=threshold,col = 'blue')
-                        text(17,0,labels=paste(
+                        text(1,threshold+0.2,labels=threshold,col = 'blue')
+                        text(20,-1,labels=paste(
                                 "Threshold: ", threshold,
                                 "\ntol: ", threshold.d,
                                 sep = ''
