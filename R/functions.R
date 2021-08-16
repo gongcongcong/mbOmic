@@ -1,6 +1,8 @@
 #'@title print
 #'@export
 #'@return logical
+#'@examples
+#'print(mbSet)
 print.mbSet <-
         function(obj){
         cat("Samples: ", obj@samples,"\n")
@@ -60,21 +62,36 @@ mbSet <-
 #' obtain the b slot from mbSet
 #' @title b.extra
 #' @return the otu abundance data table
+#' @export
+#' @examples
+#' b.extra(mbSet)
 b.extra <- function(obj) {s <- obj@samples; return(obj@b[,..s])}
 #' obtain the m slot from mbSet
 #' @title m.extra
 #' @return the metabolites abundance data table
+#' @export
+#' @examples
+#' m.extra(mbSet)
 m.extra <- function(obj) {s <- obj@samples; return(obj@m[,..s])}
 #' obtain the samples
 #' @title samples
 #' @return a vector containing sample names
+#' @export
+#' @examples
+#' samples.extra(mbSet)
 samples.extra <- function(obj) return(obj@samples)
 
 #' @title nb
 #' @return number of otu
+#' @export
+#' @examples
+#' nb.extra(mbSet)
 nb.extra <- function(obj) return(obj@nb)
 #' @title nm
 #' @return number of metabolites
+#' @export
+#' @examples
+#' nm.extra(mbSet)
 nm.extra <- function(obj) return(obj@nm)
 
 #' @title cor2df
