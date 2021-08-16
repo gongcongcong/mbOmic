@@ -1,3 +1,17 @@
+#'@title plot_wgcna
+#'@export
+#'@examples
+#'plot_wgcna(net)
+#'@return ploting
+#'@importFrom WGCNA labels2colors plotDendroAndColors
+plot_wgcna <-
+        function(net, ...){
+                mergedColors = labels2colors(net$colors)
+                plotDendroAndColors(net$dendrograms[[1]], mergedColors[net$blockGenes[[1]]],
+                                           "Module colors",
+                                           dendroLabels = FALSE, hang = 0.03,
+                                           addGuide = TRUE, guideHang = 0.05,...)
+        }
 #' plot network
 #' @importFrom tidygraph mutate as_tbl_graph centrality_degree
 #' @import ggraph
@@ -43,7 +57,7 @@ plot_network <-
                 g <- as_tbl_graph(corr) %>%
                         tidygraph::mutate(`centrality degree`=centrality_degree(mode = centrality_degree_mode),
                                key=anno_c[name],
-                               label = ifelse(`centrality degree` >= quantile(`centrality degree`,threshold), name, NA_character_))
+                               label = ifelse(`centrality degree` >= quantile(`centrality degree`,threshold), name, ''))
 
                 aes_col <- gsub(' module', '',unique(anno_c))
                 names(aes_col) <- unique(anno_c)
@@ -57,3 +71,5 @@ plot_network <-
                         geom_node_text(aes(label=label), size = 2)+
                         scale_color_manual(values = aes_col)
         }
+
+
