@@ -12,3 +12,6 @@ number of otu
 \description{
 nb
 }
+\examples{
+nb.extra(mbSet)
+}

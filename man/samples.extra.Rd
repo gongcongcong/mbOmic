@@ -12,3 +12,6 @@ a vector containing sample names
 \description{
 obtain the samples
 }
+\examples{
+samples.extra(mbSet)
+}

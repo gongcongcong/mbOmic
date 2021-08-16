@@ -12,3 +12,6 @@ the otu abundance data table
 \description{
 obtain the b slot from mbSet
 }
+\examples{
+b.extra(mbSet)
+}

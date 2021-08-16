@@ -12,3 +12,6 @@ the metabolites abundance data table
 \description{
 obtain the m slot from mbSet
 }
+\examples{
+m.extra(mbSet)
+}

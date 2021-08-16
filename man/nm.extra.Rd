@@ -12,3 +12,6 @@ number of metabolites
 \description{
 nm
 }
+\examples{
+nm.extra(mbSet)
+}

@@ -12,3 +12,6 @@ logical
 \description{
 print
 }
+\examples{
+print(mbSet)
+}

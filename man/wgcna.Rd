@@ -8,7 +8,7 @@
 wgcna(
   object,
   group,
-  minN,
+  minN = 2,
   power = NULL,
   powers = 1:30,
   threshold.d = 0.05,
