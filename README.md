@@ -34,7 +34,7 @@ path <- system.file('data',package = 'mbOmic')
 load(file.path(path,'metabolites_and_genera.rda'))
 ```
 
-## Construct the `mbSet` object.
+### Construct the `mbSet` object.
 
 `mbSet` is S4 class containing the metabolites and OTU abundance.
 
@@ -60,7 +60,7 @@ nm <- nm.extra(mb)
 cat("The mb object contains", nb, "generas and", nm, "metabolites\n")
 ```
 
-## Remove bad analytes (OTU and metatoblites)
+### Remove bad analytes (OTU and metatoblites)
 
 Removal of analytes only measured in \<2 of samples can perform by `clean_analytes`.
 
@@ -68,7 +68,7 @@ Removal of analytes only measured in \<2 of samples can perform by `clean_analyt
 mb <- clean_analytes(mb,m_thres = 2,b_thres = 2)
 ```
 
-## Generate metabolite module
+### Generate metabolite module
 
 The WGCNA package is used to generate metabolite modules. The first step is to pick up the softthreshold. This processs is enclosed into `wgcna` function of `mbOmic`. The `threshold.d` and `threshold` parameters are used to detect whether is $R^2$ changing and appropriate.
 
@@ -98,7 +98,7 @@ Result Visualization is performed by function `plotDendroAndColors` of `WGCNA` p
 plot_wgcna(net)
 ```
 
-## Calculate the Spearman metabolite-genera correlation
+### Calculate the Spearman metabolite-genera correlation
 
 you can calculate the Spearman correlation between metabolites and OTUs by `corr` function. It return a data table containing `rho`, `p value`, and `adjust p value`.
 
@@ -107,7 +107,7 @@ res <- corr(mb, method = 'spearman')
 head(res)
 ```
 
-## plot the network
+### plot the network
 
 Finally, you can vaisulize the network by `plot_network` function, taking the `wgcna` and `corr` output. The orange nodes correspondes to OTU(genera)).
 
