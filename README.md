@@ -15,13 +15,13 @@ library(devtools)
 install_github('gongcongcong/mbSet')
 ```
 
+## WorkFlow
 
+The `mbOmic` package contains a set of analysis functions for microbiomics and metabolomics data, designed to analyze the inter-omic correlation between microbiology and metabolites, referencing the workflow of Jonathan Braun et al[^McHardy].
 
-```{r}
-knitr::include_graphics('./img/mbOmic-workflow.svg')
-```
+[^McHardy]: McHardy, I. H., Goudarzi, M., Tong, M., Ruegger, P. M., Schwager, E., Weger, J. R., Graeber, T. G., Sonnenburg, J. L., Horvath, S., Huttenhower, C., McGovern, D. P., Fornace, A. J., Borneman, J., & Braun, J. (2013). Integrative analysis of the microbiome and metabolome of the human intestinal mucosal surface reveals exquisite inter-relationships. *Microbiome*, *1*(1), 17. <https://doi.org/10.1186/2049-2618-1-17>
 
-
+[mbSetWF](https://github.com/gongcongcong/mbOmic/blob/master/vignettes/img/mbOmic-workflow.svg)
 
 ## Example
 
@@ -29,7 +29,7 @@ Load metabolites and OTU abundance data of plant.[^Huang] The OTU had been binne
 
 [^Huang]: Huang, W., Sun, D., Chen, L., & An, Y. (2021). Integrative analysis of the microbiome and metabolome in understanding the causes of sugarcane bitterness. Scientific Reports, 11(1), 1-11.
 
-```{r}
+```r
 path <- system.file('data',package = 'mbOmic')
 load(file.path(path,'metabolites_and_genera.rda'))
 ```
