@@ -1,7 +1,7 @@
-
 # mbOmic
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 The `mbOmic` package contains a set of analysis functions for microbiomics and metabolomics data, designed to analyze the inter-omic correlation between microbiology and metabolites.
@@ -21,7 +21,7 @@ The `mbOmic` package contains a set of analysis functions for microbiomics and m
 
 [^McHardy]: McHardy, I. H., Goudarzi, M., Tong, M., Ruegger, P. M., Schwager, E., Weger, J. R., Graeber, T. G., Sonnenburg, J. L., Horvath, S., Huttenhower, C., McGovern, D. P., Fornace, A. J., Borneman, J., & Braun, J. (2013). Integrative analysis of the microbiome and metabolome of the human intestinal mucosal surface reveals exquisite inter-relationships. *Microbiome*, *1*(1), 17. <https://doi.org/10.1186/2049-2618-1-17>
 
-[mbSetWF](https://github.com/gongcongcong/mbOmic/blob/master/vignettes/img/mbOmic-workflow.svg)
+![mbSetWF](https://github.com/gongcongcong/mbOmic/blob/master/vignettes/img/mbOmic-workflow.svg)
 
 ## Example
 
@@ -29,7 +29,7 @@ Load metabolites and OTU abundance data of plant.[^Huang] The OTU had been binne
 
 [^Huang]: Huang, W., Sun, D., Chen, L., & An, Y. (2021). Integrative analysis of the microbiome and metabolome in understanding the causes of sugarcane bitterness. Scientific Reports, 11(1), 1-11.
 
-```r
+``` r
 path <- system.file('data',package = 'mbOmic')
 load(file.path(path,'metabolites_and_genera.rda'))
 ```
@@ -40,7 +40,7 @@ load(file.path(path,'metabolites_and_genera.rda'))
 
 We can use `mbSet` function to create directrly `mbSet` class.
 
-```r
+``` r
 mb <-
   mbSet(
       m = metabolites,
@@ -50,11 +50,11 @@ mb <-
 
 Extract the samples names from `mbSet` class by `samples.extra` function.
 
-```r
+``` r
 samples.extra(mb)
 ```
 
-```r
+``` r
 nb <- nb.extra(mb)
 nm <- nm.extra(mb)
 cat("The mb object contains", nb, "generas and", nm, "metabolites\n")
@@ -64,7 +64,7 @@ cat("The mb object contains", nb, "generas and", nm, "metabolites\n")
 
 Removal of analytes only measured in \<2 of samples can perform by `clean_analytes`.
 
-```r
+``` r
 mb <- clean_analytes(mb,m_thres = 2,b_thres = 2)
 ```
 
@@ -72,7 +72,7 @@ mb <- clean_analytes(mb,m_thres = 2,b_thres = 2)
 
 The WGCNA package is used to generate metabolite modules. The first step is to pick up the softthreshold. This processs is enclosed into `wgcna` function of `mbOmic`. The `threshold.d` and `threshold` parameters are used to detect whether is $R^2$ changing and appropriate.
 
-```r
+``` r
 net <- try({
   wgcna(mb,message = FALSE,threshold.d = 0.02, threshold = 0.8)
 })
@@ -88,13 +88,13 @@ If you can't get a good scale-free topology index no matter how high set the sof
 |        30\~40         |                    7                    |         14          |
 |         \>40          |                    6                    |         12          |
 
-```r
+``` r
 net <- wgcna(mb,message = FALSE,threshold.d = 0.02, threshold = 0.8, power = 9)
 ```
 
 Result Visualization is performed by function `plotDendroAndColors` of `WGCNA` package.
 
-```r
+``` r
 plot_wgcna(net)
 ```
 
@@ -102,7 +102,7 @@ plot_wgcna(net)
 
 you can calculate the Spearman correlation between metabolites and OTUs by `corr` function. It return a data table containing `rho`, `p value`, and `adjust p value`.
 
-```r
+``` r
 res <- corr(mb, method = 'spearman')
 head(res)
 ```
@@ -111,6 +111,6 @@ head(res)
 
 Finally, you can vaisulize the network by `plot_network` function, taking the `wgcna` and `corr` output. The orange nodes correspondes to OTU(genera)).
 
-```r
+``` r
 plot_network(net, res[abs(rho)>=0.85])
 ```
