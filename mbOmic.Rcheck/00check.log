@@ -1,9 +1,0 @@
-* using log directory ‘/home/gongcongcong/projects/mbOmic/mbOmic.Rcheck’
-* using R version 3.6.1 (2019-07-05)
-* using platform: x86_64-pc-linux-gnu (64-bit)
-* using session charset: UTF-8
-* checking for file ‘mbOmic/DESCRIPTION’ ... ERROR
-Required field missing or empty:
-  ‘Author’
-* DONE
-Status: 1 ERROR
