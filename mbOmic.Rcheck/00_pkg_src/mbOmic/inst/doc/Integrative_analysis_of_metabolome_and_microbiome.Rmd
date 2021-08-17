@@ -123,5 +123,5 @@ head(res)
 Finally, you can vaisulize the network by `plot_network` function, taking the `wgcna` and `corr` output. The orange nodes correspondes to OTU(genera)).
 
 ```{r, fig.width=8, fig.height=8}
-plot_network(net, res[abs(rho)>=0.85 & padj <= 0.05])
+plot_network(net, res[abs(rho)>=0.85])
 ```
