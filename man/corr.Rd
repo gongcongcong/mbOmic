@@ -24,5 +24,13 @@ the correlation data table
 genetic methods to perform the correlation test
 }
 \examples{
+library(data.table)
+path <- system.file('data',package = 'mbOmic')
+load(file.path(path,'metabolites_and_genera.rda'))
+object <-
+       mbSet(
+             m = metabolites,
+             b = genera
+             )
 res <- corr(object, method = 'spearman')
 }

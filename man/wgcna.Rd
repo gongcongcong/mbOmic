@@ -31,6 +31,14 @@ network
 wgcna
 }
 \examples{
+library(data.table)
+path <- system.file('data',package = 'mbOmic')
+load(file.path(path,'metabolites_and_genera.rda'))
+object <-
+       mbSet(
+             m = metabolites,
+             b = genera
+             )
 net <- wgcna(object, minN = 2, power = 9,message = FALSE)
 }
 \author{

@@ -33,19 +33,10 @@ create the mbSet class
 \examples{
 library(data.table)
 path <- system.file('data',package = 'mbOmic')
-b <- readxl::read_xlsx(file.path(path,
-                    '41598_2021_85433_MOESM2_ESM.xlsx'),
-                    sheet = 'Table S2',skip = 1)
-m <- readxl::read_xlsx(file.path(path,
-                                 '41598_2021_85433_MOESM2_ESM.xlsx'),
-                    sheet = 'Table S4',skip = 1)
-setDT(b)
-setDT(m)
-cn <- c('Name_des',grep(x = names(m), 'BS|SS.*', value = TRUE))
-m <- m[,..cn]
+load(file.path(path,'metabolites_and_genera.rda'))
 object <-
        mbSet(
-             m = m,
-             b = b
+             m = metabolites,
+             b = genera
              )
 }

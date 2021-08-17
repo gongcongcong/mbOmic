@@ -1,5 +1,4 @@
 #' @title show
-#' @export
 #' @return print
 setMethod(f = "show",
           signature = "mbSet",
@@ -16,7 +15,15 @@ setMethod(f = "show",
 #' @param b_thres, integer, Removal of OTU only measured in b_thres of samples
 #' @docType methods
 #' @examples
-#' mb <- clean_analytes(mbSet, 2, 2)
+#' library(data.table)
+#' path <- system.file('data',package = 'mbOmic')
+#' load(file.path(path,'metabolites_and_genera.rda'))
+#' object <-
+#'        mbSet(
+#'              m = metabolites,
+#'              b = genera
+#'              )
+#' mb <- clean_analytes(object, 2, 2)
 #' @return mbSet
 #' @import data.table
 #' @export
@@ -46,6 +53,14 @@ setMethod('clean_analytes', 'mbSet', function(object, m_thres=2, b_thres=2){
 #' @importFrom psych corr.test
 #' @return the correlation data table
 #' @examples
+#' library(data.table)
+#' path <- system.file('data',package = 'mbOmic')
+#' load(file.path(path,'metabolites_and_genera.rda'))
+#' object <-
+#'        mbSet(
+#'              m = metabolites,
+#'              b = genera
+#'              )
 #' res <- corr(object, method = 'spearman')
 #' @export
 setGeneric('corr', function(object, parallel = FALSE, ncore=4, ...){
@@ -115,6 +130,14 @@ setMethod(f = 'corr', signature(object = 'mbSet'),
 #' @param minN, integer the minimum number of sample
 #' @param power, integer, if the pickSoftThreshold function (WGCNA) can find appropriate power, this param is invalid
 #' @examples
+#' library(data.table)
+#' path <- system.file('data',package = 'mbOmic')
+#' load(file.path(path,'metabolites_and_genera.rda'))
+#' object <-
+#'        mbSet(
+#'              m = metabolites,
+#'              b = genera
+#'              )
 #' net <- wgcna(object, minN = 2, power = 9,message = FALSE)
 #' @export
 #' @return network

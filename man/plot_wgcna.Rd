@@ -13,5 +13,7 @@ ploting
 plot_wgcna
 }
 \examples{
+\dontrun{
 plot_wgcna(net)
+}
 }

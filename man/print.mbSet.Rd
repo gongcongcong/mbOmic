@@ -6,6 +6,9 @@
 \usage{
 \method{print}{mbSet}(obj)
 }
+\arguments{
+\item{obj, }{mbSet class}
+}
 \value{
 logical
 }

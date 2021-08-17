@@ -6,6 +6,9 @@
 \usage{
 nb.extra(obj)
 }
+\arguments{
+\item{obj, }{mbSet class}
+}
 \value{
 number of otu
 }
@@ -13,5 +16,13 @@ number of otu
 nb
 }
 \examples{
-nb.extra(mbSet)
+library(data.table)
+path <- system.file('data',package = 'mbOmic')
+load(file.path(path,'metabolites_and_genera.rda'))
+object <-
+       mbSet(
+             m = metabolites,
+             b = genera
+             )
+nb.extra(object)
 }

@@ -6,6 +6,9 @@
 \usage{
 b.extra(obj)
 }
+\arguments{
+\item{obj, }{mbSet class}
+}
 \value{
 the otu abundance data table
 }
@@ -13,5 +16,13 @@ the otu abundance data table
 obtain the b slot from mbSet
 }
 \examples{
-b.extra(mbSet)
+library(data.table)
+path <- system.file('data',package = 'mbOmic')
+load(file.path(path,'metabolites_and_genera.rda'))
+object <-
+       mbSet(
+             m = metabolites,
+             b = genera
+             )
+b.extra(object)
 }

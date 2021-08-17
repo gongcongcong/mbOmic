@@ -24,5 +24,13 @@ mbSet
 Removal of analytes only measured in few samples
 }
 \examples{
-mb <- clean_analytes(mbSet, 2, 2)
+library(data.table)
+path <- system.file('data',package = 'mbOmic')
+load(file.path(path,'metabolites_and_genera.rda'))
+object <-
+       mbSet(
+             m = metabolites,
+             b = genera
+             )
+mb <- clean_analytes(object, 2, 2)
 }

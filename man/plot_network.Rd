@@ -6,7 +6,9 @@
 \usage{
 plot_network(
     net = net,
-    corr = corr
+    corr = corr，
+    centrality_degree_mode = 'out',
+    threshold = 0.9
 )
 }
 \arguments{
@@ -15,6 +17,8 @@ plot_network(
 \item{corr, }{the result of function `corr.test`}
 
 \item{centrality_degree_mode, }{the mode for centrality_degress function}
+
+\item{threshold, }{the nodes whose centrality degree greater than the theshold will show labels}
 }
 \value{
 ggraph
@@ -23,27 +27,19 @@ ggraph
 plot network
 }
 \examples{
+\dontrun{
 library(data.table)
 path <- system.file('data',package = 'mbOmic')
-b <- readxl::read_xlsx(file.path(path,
-                    '41598_2021_85433_MOESM2_ESM.xlsx'),
-                    sheet = 'Table S2',skip = 1)
-m <- readxl::read_xlsx(file.path(path,
-                                 '41598_2021_85433_MOESM2_ESM.xlsx'),
-                    sheet = 'Table S4',skip = 1)
-setDT(b)
-setDT(m)
-cn <- c('Name_des',grep(x = names(m), 'BS|SS.*', value = TRUE))
-m <- m[,..cn]
+load(file.path(path,'metabolites_and_genera.rda'))
 object <-
        mbSet(
-             m = m,
-             b = b
+             m = metabolites,
+             b = genera
              )
-
-res <- cor.test(object, method = 'spearman')
+res <- corr(object, method = 'spearman')
 net <- wgcna(object, minN = 2, power = 9,message = FALSE)
 plot_network(net, res[abs(rho)>=0.85])
+}
 }
 \author{
 Congcong Gong

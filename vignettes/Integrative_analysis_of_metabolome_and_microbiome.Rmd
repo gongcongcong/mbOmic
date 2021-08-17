@@ -42,6 +42,7 @@ Load metabolites and OTU abundance data of plant.[^Huang] The OTU had been binne
 
 ```{r}
 path <- system.file('data',package = 'mbOmic')
+
 load(file.path(path,'metabolites_and_genera.rda'))
 ```
 

@@ -6,6 +6,9 @@
 \usage{
 nm.extra(obj)
 }
+\arguments{
+\item{obj, }{mbSet class}
+}
 \value{
 number of metabolites
 }
@@ -13,5 +16,13 @@ number of metabolites
 nm
 }
 \examples{
-nm.extra(mbSet)
+library(data.table)
+path <- system.file('data',package = 'mbOmic')
+load(file.path(path,'metabolites_and_genera.rda'))
+object <-
+       mbSet(
+             m = metabolites,
+             b = genera
+             )
+nm.extra(object)
 }

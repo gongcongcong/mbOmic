@@ -1,5 +1,6 @@
 #'@title print
 #'@export
+#'@param obj, mbSet class
 #'@return logical
 #'@examples
 #'print(mbSet)
@@ -19,20 +20,11 @@ print.mbSet <-
 #' @examples
 #' library(data.table)
 #' path <- system.file('data',package = 'mbOmic')
-#' b <- readxl::read_xlsx(file.path(path,
-#'                     '41598_2021_85433_MOESM2_ESM.xlsx'),
-#'                     sheet = 'Table S2',skip = 1)
-#' m <- readxl::read_xlsx(file.path(path,
-#'                                  '41598_2021_85433_MOESM2_ESM.xlsx'),
-#'                     sheet = 'Table S4',skip = 1)
-#' setDT(b)
-#' setDT(m)
-#' cn <- c('Name_des',grep(x = names(m), 'BS|SS.*', value = TRUE))
-#' m <- m[,..cn]
+#' load(file.path(path,'metabolites_and_genera.rda'))
 #' object <-
 #'        mbSet(
-#'              m = m,
-#'              b = b
+#'              m = metabolites,
+#'              b = genera
 #'              )
 #' @export
 #' @return mbSet class
@@ -63,35 +55,81 @@ mbSet <-
 #' @title b.extra
 #' @return the otu abundance data table
 #' @export
+#' @param obj, mbSet class
 #' @examples
-#' b.extra(mbSet)
+#' library(data.table)
+#' path <- system.file('data',package = 'mbOmic')
+#' load(file.path(path,'metabolites_and_genera.rda'))
+#' object <-
+#'        mbSet(
+#'              m = metabolites,
+#'              b = genera
+#'              )
+#' b.extra(object)
 b.extra <- function(obj) {s <- obj@samples; return(obj@b[,..s])}
 #' obtain the m slot from mbSet
 #' @title m.extra
 #' @return the metabolites abundance data table
 #' @export
+#' @param obj, mbSet class
 #' @examples
-#' m.extra(mbSet)
+#' library(data.table)
+#' path <- system.file('data',package = 'mbOmic')
+#' load(file.path(path,'metabolites_and_genera.rda'))
+#' object <-
+#'        mbSet(
+#'              m = metabolites,
+#'              b = genera
+#'              )
+#' m.extra(object)
 m.extra <- function(obj) {s <- obj@samples; return(obj@m[,..s])}
 #' obtain the samples
 #' @title samples
 #' @return a vector containing sample names
 #' @export
+#' @param obj, mbSet class
 #' @examples
-#' samples.extra(mbSet)
+#' library(data.table)
+#' path <- system.file('data',package = 'mbOmic')
+#' load(file.path(path,'metabolites_and_genera.rda'))
+
+#' object <-
+#'        mbSet(
+#'              m = metabolites,
+#'              b = genera
+#'              )
+#' samples.extra(object)
 samples.extra <- function(obj) return(obj@samples)
 
 #' @title nb
 #' @return number of otu
 #' @export
+#' @param obj, mbSet class
 #' @examples
-#' nb.extra(mbSet)
+#' library(data.table)
+#' path <- system.file('data',package = 'mbOmic')
+#' load(file.path(path,'metabolites_and_genera.rda'))
+#' object <-
+#'        mbSet(
+#'              m = metabolites,
+#'              b = genera
+#'              )
+#' nb.extra(object)
 nb.extra <- function(obj) return(obj@nb)
 #' @title nm
 #' @return number of metabolites
 #' @export
+#' @param obj, mbSet class
 #' @examples
-#' nm.extra(mbSet)
+#' library(data.table)
+#' path <- system.file('data',package = 'mbOmic')
+#' load(file.path(path,'metabolites_and_genera.rda'))
+#' object <-
+#'        mbSet(
+#'              m = metabolites,
+#'              b = genera
+#'              )
+#' nm.extra(object)
 nm.extra <- function(obj) return(obj@nm)
 
 #' @title cor2df

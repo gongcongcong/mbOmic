@@ -6,6 +6,9 @@
 \usage{
 samples.extra(obj)
 }
+\arguments{
+\item{obj, }{mbSet class}
+}
 \value{
 a vector containing sample names
 }
@@ -13,5 +16,13 @@ a vector containing sample names
 obtain the samples
 }
 \examples{
-samples.extra(mbSet)
+library(data.table)
+path <- system.file('data',package = 'mbOmic')
+load(file.path(path,'metabolites_and_genera.rda'))
+object <-
+       mbSet(
+             m = metabolites,
+             b = genera
+             )
+samples.extra(object)
 }
