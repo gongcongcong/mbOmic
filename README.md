@@ -12,7 +12,7 @@ You can install the released version of mbOmic from [github](https://github.com/
 
 ``` r
 library(devtools)
-install_github('gongcongcong/mbSet')
+install_github('gongcongcong/mbOmic')
 ```
 
 ## WorkFlow
