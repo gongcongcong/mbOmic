@@ -21,7 +21,7 @@ The `mbOmic` package contains a set of analysis functions for microbiomics and m
 
 [^McHardy]: McHardy, I. H., Goudarzi, M., Tong, M., Ruegger, P. M., Schwager, E., Weger, J. R., Graeber, T. G., Sonnenburg, J. L., Horvath, S., Huttenhower, C., McGovern, D. P., Fornace, A. J., Borneman, J., & Braun, J. (2013). Integrative analysis of the microbiome and metabolome of the human intestinal mucosal surface reveals exquisite inter-relationships. *Microbiome*, *1*(1), 17. <https://doi.org/10.1186/2049-2618-1-17>
 
-![mbSetWF](https://github.com/gongcongcong/mbOmic/blob/master/vignettes/img/mbOmic-workflow.svg)
+![mbSetWF](vignettes/img/intro.png)
 
 ## Example
 

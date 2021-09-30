@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot_network}
 \alias{plot_network}
-\title{plot network}
+\title{plot_network}
 \usage{
 plot_network(
     net = net,

@@ -1,7 +1,7 @@
 Package: mbOmic
 Type: Package
 Title: Integrative analysis of the microbiome and metabolome
-Version: 0.99.1
+Version: 0.99.2
 Description: Integrative analysis of the microbiome and metabolome
 License: Artistic-2.0
 Author@R: person("Congcong", "Gong", email = congconggong33@gmail.com, role = c("cre", "aut"), comment = c(ORCID = "0000-0002-9483-1424"))
@@ -10,7 +10,7 @@ Maintainer: Congcong Gong <congconggong33@gmail.com>
 URL: https://github.com/gongcongcong/mbOmic
 BugReports: https://github.com/gongcongcong/mbOmic/issues
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports:
         tidygraph,
         magrittr,
