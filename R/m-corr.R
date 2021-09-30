@@ -55,7 +55,7 @@ setMethod(f = 'corr', signature(object = 'mbSet'),
                                                library(magrittr,quietly = TRUE)
                                                library(data.table,quietly = TRUE)
                                        })
-                          clusterExport(cl, list('m','b'),
+                          clusterExport(cl, list('m','b','stopCluster'),
                                         envir = environment())
 
                           res <-
