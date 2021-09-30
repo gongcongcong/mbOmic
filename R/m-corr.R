@@ -24,7 +24,7 @@ setGeneric('corr', function(object, parallel = FALSE, ncore=4, ...){
 #' @description genetic methods to perform the correlation test
 #' @title corr
 #' @importFrom magrittr %>%
-#' @importFrom parallel makeCluster parLapply clusterEvalQ clusterExport
+#' @importFrom parallel makeCluster parLapply clusterEvalQ clusterExport stopCluster
 #' @docType methods
 setMethod(f = 'corr', signature(object = 'mbSet'),
           definition = function(object, parallel = FALSE, ncore=4, ...){
@@ -55,7 +55,7 @@ setMethod(f = 'corr', signature(object = 'mbSet'),
                                                library(magrittr,quietly = TRUE)
                                                library(data.table,quietly = TRUE)
                                        })
-                          clusterExport(cl, list('m','b','stopCluster'),
+                          clusterExport(cl, list('m','b'),
                                         envir = environment())
 
                           res <-
