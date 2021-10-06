@@ -97,7 +97,6 @@ If you can't get a good scale-free topology index no matter how high set the sof
 
 ``` r
 net <- coExpress(mb,message = TRUE,threshold.d = 0.02, threshold = 0.8, power = 9)
-
 ```
 
 Result Visualization is performed by function `plot_coExpress`.

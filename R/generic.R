@@ -1,5 +1,4 @@
 #' @title dim
-#' @docType method
 #' @export
 setMethod('dim','mbSet',
           function(x) {

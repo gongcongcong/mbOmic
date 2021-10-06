@@ -48,26 +48,30 @@ plot_coExpress <-
 #' @return ggraph
 #' @importFrom ggplot2 aes coord_fixed scale_color_manual labs
 plot_network <-
-        function(net, corr, centrality_degree_mode = 'out',threshold=0.9){
-                anno_c <- c(rep('orange',length(net$bs)),
+        function(net, corr, centrality_degree_mode = 'out',threshold=0.9, show_text = TRUE){
+                bN <- as.character(unique(corr$b))
+                anno_c <- c(rep('orange',length(bN)),
                             as.character(interaction(net$colors, 'module', sep =' ')))
-                names(anno_c) <- c(as.character(net$bs), names(net$colors))
+                names(anno_c) <- c(bN, names(net$colors))
                 g <- as_tbl_graph(corr) %>%
                         tidygraph::mutate(`centrality degree`=centrality_degree(mode = centrality_degree_mode),
                                key=anno_c[name],
                                label = ifelse(`centrality degree` >= quantile(`centrality degree`,threshold), name, ''))
 
-                aes_col <- gsub(' module', '',unique(anno_c))
+                aes_col <- gsub(' module', '', unique(anno_c))
                 names(aes_col) <- unique(anno_c)
-                ggraph(g, 'kk') +
+                g <- ggraph(g, 'kk') +
                         geom_edge_link() +
                         geom_node_point(aes(colour = factor(key),
                                             size = `centrality degree`)) +
                         coord_fixed() +
                         labs(color = '') +
                         theme_graph(foreground = 'steelblue', fg_text_colour = 'white')+
-                        geom_node_text(aes(label=label), size = 2)+
                         scale_color_manual(values = aes_col)
+                if (show_text) {
+                        g <- g + geom_node_text(aes(label=label), size = 2)
+                }
+                g
         }
 
 

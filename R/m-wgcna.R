@@ -10,15 +10,15 @@
 setGeneric(name = 'coExpress',
            def =
                    function(object, power = NULL, powerVec = 1:30,
-                            threshold = 0.8, message = TRUE, ...) {
+                            threshold = 0.8, message = TRUE, plot = FALSE, ...) {
                            standardGeneric('coExpress')
                    })
 
 #' @title coExpress
 #' @importFrom WGCNA goodSamplesGenes blockwiseModules cor
 #' @return network
-setMethod('coExpress', 'mbSet', function(object,power = NULL, powerVec = 1:30,
-                                         threshold = 0.8, message = TRUE, ...){
+setMethod('coExpress', 'mbSet', function(object,power = NULL, powerVec,
+                                         threshold = 0.8, message = TRUE, plot = FALSE, ...){
 
         if (!message){
                 sink(tempfile())
@@ -27,34 +27,35 @@ setMethod('coExpress', 'mbSet', function(object,power = NULL, powerVec = 1:30,
         object <- clean_analytes(object)
         m <- m(object)
         mN <- m$rn
-        m <- m[,rn:=NULL]
+        m <- m[, rn:=NULL]
         cat("\nOne: detect the power for softThreshold\n")
-        pw <- pickST(
-                m,
-                plot = FALSE,
-                threshold.d = 0.05,
-                threshold = threshold,
-                powers = powerVec
-        )
+        if (missing(powerVec)) powerVec <-  c(c(1:10), seq(from = 12, to=20, by=2))
+        if (is.null(power)) {
+                pw <- quiteRun(
+                        pickST(
+                                m,
+                                plot = plot,
+                                threshold.d = 0.05,
+                                threshold = threshold,
+                                powers = powerVec
+                        )
 
-        if (is.na(pw)) {
-                if (is.null(power)) {
-                        stop("No power detected! pls set the power parameter\n")
-                } else(
-                        pw <- power
                 )
+        } else pw <- power
+        if (is.na(pw)) {
+                stop("No power detected! pls set the power parameter\n")
         }
         # id <- featureNames(mExpSet(object))
         cat("\nusing the power: ", pw, "to constructe net!\n")
-        cat("\nTwo: Eetwork construction and module detection was done\n")
+        cat("\nTwo: Network construction and module detection was done\n")
         net <-  quiteRun(blockwiseModules(datExpr = t(m),
                                           power = pw, ...))
         res <- net$colors
         res <- res[res!='grey']
         res <- data.frame(table(res))
         names(res) <- c("Module","Size")
-        cat("There are ", nrow(res), "modules were constructed: \n")
-        apply(res, 1, cat, '\n')
+        cat("====> There are ", nrow(res), "modules were constructed: \n")
+        apply(res, 1, function(x) cat("====|| ", x, "\n"))
         #structure(net$colors, MEs = net$MEs, class = 'mb.module')
         names(net$colors) <- mN
         net
@@ -67,8 +68,7 @@ setMethod('coExpress', 'mbSet', function(object,power = NULL, powerVec = 1:30,
 #' @return power
 
 pickST <-
-        function(m, threshold.d = 0.05, threshold = 0.8, plot = TRUE,powers =NULL){
-                if (is.null(powers)) powers <-  c(c(1:10), seq(from = 12, to=20, by=2))
+        function(m, threshold.d = 0.05, threshold = 0.8, plot = TRUE,powers = NULL){
                 suppressWarnings(
                         sft <- quiteRun(pickSoftThreshold(m,dataIsExpr = TRUE, powerVector = powers, verbose = 5))
                 )
