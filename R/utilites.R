@@ -39,6 +39,7 @@ mbSamples <-
 #' @param m_thres, integer, Removal of metabolites only measured in m_thres of samples
 #' @param b_thres, integer, Removal of OTU only measured in b_thres of samples
 #' @import data.table
+#' @export
 clean_analytes <-
         function(object, m_thres=2, b_thres=2){
                 m <- m(object)
@@ -61,5 +62,7 @@ quiteRun <- function(x) {
         on.exit(sink())
         invisible(force(x))
 }
+
+
 
 

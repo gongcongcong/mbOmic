@@ -24,7 +24,7 @@ setGeneric('corr', function(object, parallel = FALSE, ncore=4, ...){
 #' @description genetic methods to perform the correlation test
 #' @title corr
 #' @importFrom magrittr %>%
-#' @importFrom parallel makeCluster parLapply clusterEvalQ clusterExport stopCluster
+#' @importFrom parallel makeCluster stopCluster parLapply clusterEvalQ clusterExport
 #' @docType methods
 setMethod(f = 'corr', signature(object = 'mbSet'),
           definition = function(object, parallel = FALSE, ncore=4, ...){

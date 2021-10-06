@@ -45,11 +45,16 @@ setMethod('coExpress', 'mbSet', function(object,power = NULL, powerVec = 1:30,
                 )
         }
         # id <- featureNames(mExpSet(object))
-        cat("\nusing the powser: ", pw, "to constructe net!\n")
-        cat("\nTwo: Automatic network construction and module detection by one-step method\n")
+        cat("\nusing the power: ", pw, "to constructe net!\n")
+        cat("\nTwo: Eetwork construction and module detection was done\n")
         net <-  quiteRun(blockwiseModules(datExpr = t(m),
                                           power = pw, ...))
-
+        res <- net$colors
+        res <- res[res!='grey']
+        res <- data.frame(table(res))
+        names(res) <- c("Module","Size")
+        cat("There are ", nrow(res), "modules were constructed: \n")
+        apply(res, 1, cat, '\n')
         #structure(net$colors, MEs = net$MEs, class = 'mb.module')
         names(net$colors) <- mN
         net
