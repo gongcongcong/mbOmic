@@ -66,7 +66,7 @@ plot_network <-
                                             size = `centrality degree`)) +
                         coord_fixed() +
                         labs(color = '') +
-                        theme_graph(foreground = 'steelblue', fg_text_colour = 'white')+
+                        theme_graph(foreground = 'steelblue', fg_text_colour = 'white', base_family = 'Helvetica')+
                         scale_color_manual(values = aes_col)
                 if (show_text) {
                         g <- g + geom_node_text(aes(label=label), size = 2)
