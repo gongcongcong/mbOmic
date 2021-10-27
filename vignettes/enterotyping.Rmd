@@ -1,0 +1,40 @@
+---
+title: "enterotyping"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{enterotyping}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+# library(mbOmic)
+```
+
+```{r}
+dat <- read.delim('http://enterotypes.org/ref_samples_abundance_MetaHIT.txt')
+dat <- impute::impute.knn(as.matrix(dat), k = 100)
+rest <- read.table('../data/2023822317883221635258558.txt')
+rest <- rest[colnames(dat$data),]
+res2 <- estimate_k(dat$data+0.001)
+```
+
+```{r}
+table(res2$verOptCluster, rest$ET)
+```
+
+```{r}
+ret=enterotyping(dat$data+0.01, 
+                 res2$verOptCluster, 
+                 threshold = 0.02)
+ret
+```
+
+

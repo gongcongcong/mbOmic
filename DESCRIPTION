@@ -19,7 +19,9 @@ Imports:
         WGCNA, 
         data.table, 
         ggraph, 
-        ggplot2
+        ggplot2,
+        cluster,
+        clusterSim
 Suggests: 
     testthat (>= 3.0.0),
     knitr,

@@ -10,6 +10,7 @@
   powerVec = 1:30,
   threshold = 0.8,
   message = TRUE,
+  plot = FALSE,
   ...
 )
 }
