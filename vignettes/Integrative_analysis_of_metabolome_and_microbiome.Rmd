@@ -92,7 +92,7 @@ mb <- clean_analytes(mb,m_thres = 2,b_thres = 2)
 
 `mbOmic` can generate metabolite module by `coExpress` function. The `coExpress` function is the encapsulation of one-step network construction and module detection of `WGCNA` package. The `coExpress` function firstly pick up the soft-threshold. The `threshold.d` and `threshold` parameters are used to detect whether is $R^2$ changing and appropriate.
 
-```{r}
+```{r, fig.width= 7, fig.height= 6}
 net <- try({
   coExpress(mb,message = TRUE,threshold.d = 0.02, threshold = 0.8, plot = TRUE)
 })
@@ -110,13 +110,11 @@ If you can't get a good scale-free topology index no matter how high set the sof
 
 ```{r}
 net <- coExpress(mb,message = TRUE,threshold.d = 0.02, threshold = 0.8, power = 9)
-
-
 ```
 
 Result Visualization is performed by function `plot_coExpress`.
 
-```{r, fig.align='center', fig.width= "100%"}
+```{r, fig.align='center', fig.width= 7, fig.height= 6}
 plot_coExpress(net)
 ```
 
@@ -134,12 +132,12 @@ head(spearm)
 Finally, you can vaisulize the network by `plot_network` function, taking the `coExpress`and `corr` output. The orange nodes correspondes to OTU(genera)).
 
 
-```{r, fig.align='center', fig.width= "100%"}
+```{r, fig.align='center', fig.width= 7, fig.height= 6}
 plot_network(net, spearm[abs(rho) >= 0.75 & p <= 0.05], threshold = 0.75, show_text = FALSE)
 ```
 
 
-```{r, fig.align='center', fig.width= "100%"}
+```{r, fig.align='center', fig.width= 7, fig.height= 6}
 plot_network(net, spearm[abs(rho) >= 0.75 & padj <= 0.05], threshold = 0.75)
 ```
 
