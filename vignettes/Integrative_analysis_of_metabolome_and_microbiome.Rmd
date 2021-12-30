@@ -116,7 +116,7 @@ net <- coExpress(mb,message = TRUE,threshold.d = 0.02, threshold = 0.8, power = 
 
 Result Visualization is performed by function `plot_coExpress`.
 
-```{r}
+```{r, fig.align='center', fig.width= "100%"}
 plot_coExpress(net)
 ```
 
@@ -134,12 +134,12 @@ head(spearm)
 Finally, you can vaisulize the network by `plot_network` function, taking the `coExpress`and `corr` output. The orange nodes correspondes to OTU(genera)).
 
 
-```{r}
+```{r, fig.align='center', fig.width= "100%"}
 plot_network(net, spearm[abs(rho) >= 0.75 & p <= 0.05], threshold = 0.75, show_text = FALSE)
 ```
 
 
-```{r}
+```{r, fig.align='center', fig.width= "100%"}
 plot_network(net, spearm[abs(rho) >= 0.75 & padj <= 0.05], threshold = 0.75)
 ```
 
