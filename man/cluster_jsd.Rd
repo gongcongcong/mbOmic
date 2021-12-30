@@ -7,9 +7,12 @@
 cluster_jsd(dist, b, k)
 }
 \arguments{
-\item{dist}{distance matrix, if miss distance matrix the bacterial abundance matrix `b` was used to calculate the Jensen-Shannon divergence}
+\item{dist}{distance matrix, if miss distance matrix the
+bacterial abundance matrix `b` was used to calculate the
+Jensen-Shannon divergence}
 
-\item{b}{bacterial abundance matrix, if the distance matrix `dist` was given, it is useless}
+\item{b}{bacterial abundance matrix, if the distance matrix
+`dist` was given, it is useless}
 
 \item{k}{number of cluster}
 }
@@ -17,5 +20,16 @@ cluster_jsd(dist, b, k)
 cluster vector
 }
 \description{
-cluster the sample using the pam based the JSD
+`cluster_jsd` cluster the sample using the pam based the JSD.
+}
+\examples{
+
+data(iris)
+## using the matrix to cluster samples.
+res_cluster <- cluster_jsd(b=t(iris[,1:4]), k = 3)
+## or using the resoult of dist_jsd
+## dist <- dist_jsd(iris[, 1:4])
+## res_cluster <- cluster_jsd(dist = iris[,1:4], k = 3)
+table(res_cluster, iris[, 5])
+
 }

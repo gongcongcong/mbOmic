@@ -5,25 +5,28 @@
 \alias{corr}
 \title{corr}
 \usage{
-corr(object, parallel = FALSE, ncore = 4, ...)
+corr(object, method = "spearman", parallel = FALSE, ncore = 4)
 }
 \arguments{
-\item{object, }{mbSet class}
+\item{object}{mbSet class}
 
-\item{parallel, }{logical}
+\item{method}{character default is spearman}
 
-\item{ncore, }{integer number of core,default is 4}
+\item{parallel}{logical}
+
+\item{ncore}{integer number of core,default is 4}
 }
 \value{
 the correlation data table
 }
 \description{
-corr
+Calculating spearman correlation between each OTU and
+each metabolites.
 }
 \examples{
 library(data.table)
-path <- system.file('data',package = 'mbOmic')
-load(file.path(path,'metabolites_and_genera.rda'))
+path <- system.file('extdata','metabolites_and_genera.rda',package = 'mbOmic')
+load(path)
 object <-
        mbSet(
              m = metabolites,

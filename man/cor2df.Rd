@@ -6,9 +6,12 @@
 \usage{
 cor2df(res)
 }
+\arguments{
+\item{res}{output of corr.test}
+}
 \value{
 data table
 }
 \description{
-cor2df
+Coverting the correlation result to data table class.
 }

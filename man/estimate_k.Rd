@@ -15,9 +15,11 @@ estimate_k(b, verK = 2:10)
 list
 }
 \description{
-optimal number of cluster was estimated using Calinski-Harabasz (CH) Index
+To estimate the optimal cluster number ,
+`estimate_k` takes advantage of two measures,
+Calinski-Harabasz (CH) Index and silhouette coefficients.
 }
 \examples{
 data(iris)
-ret <- estimate_k(b = t(iris[,1:4]), 1:10)
+ret <- estimate_k(b = t(iris[, 1:4]), 1:10)
 }

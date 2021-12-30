@@ -6,9 +6,20 @@
 \usage{
 pickST(m, threshold.d = 0.05, threshold = 0.8, plot = TRUE, powers = NULL)
 }
+\arguments{
+\item{m}{data.table metabolites abundance}
+
+\item{threshold.d}{numeric rol}
+
+\item{threshold}{numeric threshold}
+
+\item{plot}{logical whether to plot}
+
+\item{powers}{vector}
+}
 \value{
-power
+integer
 }
 \description{
-Automatic network construction and module detection by one-step method
+Picking up the Soft threshold of metabolites abundance matrix.
 }

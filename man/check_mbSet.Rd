@@ -2,13 +2,20 @@
 % Please edit documentation in R/classes.R
 \name{check_mbSet}
 \alias{check_mbSet}
-\title{check_mbSet}
+\title{check_mbSet
+
+`check_mbSet` check the mbSet class.}
 \usage{
 check_mbSet(object)
+}
+\arguments{
+\item{object}{mbSet}
 }
 \value{
 logical
 }
 \description{
-check function for mbSet
+check_mbSet
+
+`check_mbSet` check the mbSet class.
 }

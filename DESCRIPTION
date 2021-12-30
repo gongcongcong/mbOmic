@@ -2,18 +2,23 @@ Package: mbOmic
 Type: Package
 Title: Integrative analysis of the microbiome and metabolome
 Version: 0.99.2
-Description: Integrative analysis of the microbiome and metabolome
+Description: The mbOmic package contains a set of analysis 
+    functions for microbiomics and metabolomics data, designed 
+    to analyze the inter-omic correlation between microbiology
+    and metabolites. Integrative analysis of the microbiome 
+    and metabolome is the aim of mbOmic. Additionally, the 
+    identification of enterotype using the gut microbiota 
+    abundance is preliminaryimplemented.
 License: Artistic-2.0
-Author@R: person("Congcong", "Gong", email = congconggong33@gmail.com, role = c("cre", "aut"), comment = c(ORCID = "0000-0002-9483-1424"))
-Author: gongcongcong
-Maintainer: Congcong Gong <congconggong33@gmail.com>
+Authors@R: person("Congcong", "Gong", email = "congconggong33@gmail.com", 
+                  role= c("aut", "cre"), comment = c(ORCID = "0000-0002-9483-1424"))
+Maintainer@R: CongcongGong <congconggong33@gmail.com>
 URL: https://github.com/gongcongcong/mbOmic
 BugReports: https://github.com/gongcongcong/mbOmic/issues
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 Imports:
         tidygraph,
-        magrittr,
         parallel, 
         psych, 
         WGCNA, 
@@ -21,11 +26,16 @@ Imports:
         ggraph, 
         ggplot2,
         cluster,
-        clusterSim
+        clusterSim,
+        methods,
+        graphics,
+        stats
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    devtools,
+    impute
 VignetteBuilder: 
         knitr
 biocViews: 
@@ -34,4 +44,4 @@ biocViews:
         Network
 Config/testthat/edition: 3
 Depends: 
-    R (>= 3.6)
+    R (>= 4.1.0)

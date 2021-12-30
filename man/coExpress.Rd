@@ -8,7 +8,7 @@
 coExpress(
   object,
   power = NULL,
-  powerVec = 1:30,
+  powerVec = seq_len(30),
   threshold = 0.8,
   message = TRUE,
   plot = FALSE,
@@ -16,17 +16,40 @@ coExpress(
 )
 }
 \arguments{
-\item{object, }{mbSet class}
+\item{object}{mbSet class}
 
-\item{power, }{integer, if the pickSoftThreshold function (WGCNA) can find appropriate power, this param is invalid}
+\item{power}{integer if the pickSoftThreshold function (WGCNA) can find appropriate power, this param is invalid}
 
-\item{minN, }{integer the minimum number of sample}
+\item{powerVec}{vector was passed to PickST function to get the power value}
+
+\item{threshold}{numeric as the threshold to filter power value}
+
+\item{message}{logical whether to show verbose info}
+
+\item{plot}{logical whether plot in PickST function}
+
+\item{...}{additional arguments passed to WGCNA}
 }
 \value{
 network
 }
 \description{
-coExpress
+`coExpress` identify the co-expression metabolites by
+performing the metabolites adjant matrix basing their
+relative abundace. This process was mainly implemented
+using the WGCNA package.
+}
+\examples{
+library(data.table)
+path <- system.file('extdata', 'metabolites_and_genera.rda', package = 'mbOmic')
+load(path)
+object <-
+       mbSet(
+             m = metabolites,
+             b = genera
+             )
+res <- corr(object, method = 'spearman')
+net <- coExpress(object, minN = 2, power = 9, message = FALSE)
 }
 \author{
 Congcong Gong

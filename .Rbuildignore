@@ -1,2 +1,5 @@
 ^.*\.Rproj$
+^data-raw$
+^\.gitignore$
 ^\.Rproj\.user$
+^\.git$

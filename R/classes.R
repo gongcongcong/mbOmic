@@ -1,5 +1,8 @@
-#' check function for mbSet
 #' @title check_mbSet
+#'
+#' `check_mbSet` check the mbSet class.
+#'
+#' @param object mbSet
 #' @return logical
 check_mbSet <-
         function(object) {
@@ -13,32 +16,42 @@ check_mbSet <-
                 nm <- nrow(m)
                 nb <- nrow(b)
                 if (nrow(anno.m) != nm | nrow(anno.b) != nb){
-                        msg <- "Features number is not same between abundance data and annotation data!"
+                        msg <- "Features number is't same between
+                                abundance and annotation data"
                         errors <- c(errors, msg)
                 }
-
-                if (!identical(sort(m$rn), sort(anno.m$rn)) | !identical(sort(b$rn), sort(anno.b$rn))){
+                sorted_m_rn <- identical(sort(m$rn), sort(anno.m$rn))
+                sorted_b_rn <- identical(sort(b$rn), sort(anno.b$rn))
+                if (!sorted_m_rn | !sorted_b_rn){
                         msg <- "Features names is not identical!"
                         errors <- c(errors,msg)
                 }
                 if (!identical(mSN, bSN)){
-                        msg <- "Samples is not match between metabolites and microbiotas"
+                        msg <- "Samples is't match between
+                                metabolites and microbiotas"
                         errors <- c(errors, msg)
                 }
-                if (!identical(mSN, object@samples) | !identical(bSN, object@samples)){
+                identical_m_sam <- identical(mSN, object@samples)
+                identical_b_sam <- identical(bSN, object@samples)
+                if (!identical_m_sam | !identical_b_sam){
                         msg <- "Samples names is wrong!"
                         errors <- c(errors, msg)
                 }
                 if (length(errors) == 0) TRUE else errors
         }
 
-#' @slot b  abundance of OTU, column response to samples, row response to microbiota
-#' @slot m abundance abundance, column response to samples, row response to metabolites
+#' mbSet
+#'
+#' `mbSet` is the main S4 class of mbOmic. It contains the
+#'  metabolites (`m`) and OTU (`b`) abundance matrix.
+#'  The `anno.m` and `anno.b` are the annotation of the `m`
+#'  and `b`, respectially, which need to implement on the later.
+#'
+#' @slot b  OTU, column response to samples, row response to microbiota
+#' @slot m metabolites, column response to samples, row response to metabolites
 #' @slot anno.m metabolites features
 #' @slot anno.b microbiota features
 #' @slot samples samples names
-#' @name mbSet
-#' @title mbSet
 #' @docType class
 #' @export
 setClass(
@@ -61,13 +74,20 @@ setClass(
 )
 
 
-#' @title create a mbSet class
+#' mbSet
+#' @description create a mbSet class.
 #' @import data.table
-#' @param m, the dataframe of metabolites abundance profile
-#' @param b, the dataframe of OTU abundance profile
+#' @param m the dataframe of metabolites abundance profile
+#' @param b the dataframe of OTU abundance profile
+#' @param anno.m dataframe for annotaing metabolites
+#' @param anno.b dataframe for annotating OTU
+#' @param m.f character th column contains metabolite ID
+#' @param b.f character the column contains OTU ID
 #' @examples
-#' path <- system.file('data',package = 'mbOmic')
-#' load(file.path(path,'metabolites_and_genera.rda'))
+#' path <- system.file('extdata',
+#'                     'metabolites_and_genera.rda',
+#'                      package = 'mbOmic')
+#' load(path)
 #' object <-
 #'        mbSet(
 #'              m = metabolites,
@@ -75,19 +95,23 @@ setClass(
 #'              )
 #' @export
 #' @return mbSet object
+#' @importFrom methods new
+#' @importFrom stats setNames
 mbSet <-
         function(m, b, anno.m, anno.b, m.f, b.f){
-                m <- as.data.table(m,keep.rownames = TRUE)
-                b <- as.data.table(b,keep.rownames = TRUE)
+                m <- as.data.table(m, keep.rownames = TRUE)
+                b <- as.data.table(b, keep.rownames = TRUE)
                 samples <- intersect(names(m), names(b))
                 if (length(samples) == 0 | identical(samples, 'rn')) {
-                        stop("There are no samples in common of m and b!")
+                        stop("There are no samples
+                             in common of m and b!")
                 }
                 if (!'rn' %in% names(m)) {
                         if (missing(m.f)) {
                                 m.f <- setdiff(names(m), samples)
                                 if (length(m.f) != 1) {
-                                        stop("The m does not has rownames and the m.f not setted!")
+                                        stop("The m does not has rownames
+                                              and the m.f not setted!")
                                 }
                         }
                         names(m)[names(m)==m.f] <- 'rn'
@@ -104,8 +128,8 @@ mbSet <-
                 samples <- setdiff(samples, 'rn')
                 samples <- sort(samples)
                 id <- c('rn', samples)
-                m <- m[, ..id]
-                b <- b[, ..id]
+                m <- m[, id, with = FALSE]
+                b <- b[, id, with = FALSE]
                 if (missing(anno.m)) {
                         anno.m <- data.table(rn=m$rn)
                 }
@@ -117,14 +141,14 @@ mbSet <-
                     samples = samples)
         }
 
+#' @description show.
 #' @title show
 #' @return print
-setMethod(f = "show",
-          signature = "mbSet",
-          definition = function(object){
-                  cat("Samples(",length(mbSamples(object)),"): ", mbSamples(object),"\n")
-                  cat("number of OTU: ", bNum(object), "\n")
-                  cat("number of metabolites: ", mNum(object), "\n")
+#' @param object mbSet
+setMethod(f = "show", signature = "mbSet", definition = function(object){
+        cat("Samples(",length(mbSamples(object)),"): ", mbSamples(object),"\n")
+        cat("number of OTU: ", bNum(object), "\n")
+        cat("number of metabolites: ", mNum(object), "\n")
           })
 
 

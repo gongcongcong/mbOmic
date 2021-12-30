@@ -2,7 +2,10 @@
 % Please edit documentation in R/enterotype.R
 \name{dist_jsd}
 \alias{dist_jsd}
-\title{dist_jsd}
+\title{dist_jsd
+
+Calculating Jensen-Shannon divergence basing the formulate
+\eqn{JSD(P || Q) = \sqrt{0.5 \times KLD (P||\frac{P + Q}{2}) + 0.5 \times KLD(Q||\frac{P+Q}{2})} }.}
 \usage{
 dist_jsd(b)
 }
@@ -13,5 +16,14 @@ dist_jsd(b)
 Jensen-Shannon divergence data frame
 }
 \description{
-calculate Jensen-Shannon divergence
+dist_jsd
+
+Calculating Jensen-Shannon divergence basing the formulate
+\eqn{JSD(P || Q) = \sqrt{0.5 \times KLD (P||\frac{P + Q}{2}) + 0.5 \times KLD(Q||\frac{P+Q}{2})} }.
+
+
+}
+\examples{
+data(iris)
+dist <- dist_jsd(iris[, 1:4])
 }

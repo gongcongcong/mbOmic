@@ -1,6 +1,13 @@
-#' @description calculate Jensen-Shannon divergence
 #' @title dist_jsd
+#'
+#' Calculating Jensen-Shannon divergence basing the formulate
+#' \eqn{JSD(P || Q) = \sqrt{0.5 \times KLD (P||\frac{P + Q}{2}) + 0.5 \times KLD(Q||\frac{P+Q}{2})} }.
+#'
+#' @title
 #' @param b bacterial abundance matrix
+#' @examples
+#' data(iris)
+#' dist <- dist_jsd(iris[, 1:4])
 #' @return Jensen-Shannon divergence data frame
 #' @export
 dist_jsd <- function(b) {
@@ -27,11 +34,26 @@ dist_jsd <- function(b) {
         dist
 }
 
-#' @description  cluster the sample using the pam based the JSD
-#' @title cluster_jsd
-#' @param dist distance matrix, if miss distance matrix the bacterial abundance matrix `b` was used to calculate the Jensen-Shannon divergence
-#' @param b bacterial abundance matrix, if the distance matrix `dist` was given, it is useless
+#' cluster_jsd
+#'
+#' `cluster_jsd` cluster the sample using the pam based the JSD.
+#'
+#' @param dist distance matrix, if miss distance matrix the
+#' bacterial abundance matrix `b` was used to calculate the
+#' Jensen-Shannon divergence
+#' @param b bacterial abundance matrix, if the distance matrix
+#'  `dist` was given, it is useless
 #' @param k number of cluster
+#' @examples
+#'
+#' data(iris)
+#' ## using the matrix to cluster samples.
+#' res_cluster <- cluster_jsd(b=t(iris[,1:4]), k = 3)
+#' ## or using the resoult of dist_jsd
+#' ## dist <- dist_jsd(iris[, 1:4])
+#' ## res_cluster <- cluster_jsd(dist = iris[,1:4], k = 3)
+#' table(res_cluster, iris[, 5])
+#'
 #' @return cluster vector
 #' @export
 cluster_jsd <- function(dist, b, k) {
@@ -40,14 +62,18 @@ cluster_jsd <- function(dist, b, k) {
         as.vector(cluster::pam(dist, k = k, diss = TRUE)$clustering)
 }
 
-#' @description optimal number of cluster was estimated using Calinski-Harabasz (CH) Index
-#' @title estimate_k
+#' estimate_k
+#'
+#' To estimate the optimal cluster number ,
+#' `estimate_k` takes advantage of two measures,
+#' Calinski-Harabasz (CH) Index and silhouette coefficients.
+#'
 #' @param b bacterial abundance matrix
 #' @param verK number vector of cluster
 #' @return list
 #' @examples
 #' data(iris)
-#' ret <- estimate_k(b = t(iris[,1:4]), 1:10)
+#' ret <- estimate_k(b = t(iris[, 1:4]), 1:10)
 #' @export
 estimate_k <- function(b, verK = 2:10) {
         if (min(verK) <= 1) verK <- verK[verK >1]
@@ -57,21 +83,20 @@ estimate_k <- function(b, verK = 2:10) {
         optK <- 0 #optimal number of cluster
         optCHI <- 0 #CHI with optimal number ofcluster
         Silhouette <- 0 #silhouette coefficients with optimal number ofcluster
-        ret <- lapply(verK,
-               function(x) {
-                       verTmpCluster <- cluster_jsd(dist = dist, k = x)
-                       CHI <- clusterSim::index.G1(t(b), verTmpCluster, d = dist, centrotypes = "medoids")
-                       silhouette <- cluster::silhouette(verTmpCluster, dist)[,3] |> mean()# silhouette coefficients
-                       if (CHI > optCHI) {
-                               optCHI <<- CHI
-                               optK <<- x
-                               verCluster <<- verTmpCluster
-                               Silhouette <<- silhouette
-                       }
-                       list(CHI = CHI, silhouette = silhouette)
-               })
-        verCHI = sapply(ret, function(x) x[['CHI']]) #CHI verctor
-        verSilhouette = sapply(ret, function(x) x[['silhouette']]) #vector silhouette coefficients
+        ret <- lapply(verK, function(x) {
+                verTmpCluster <- cluster_jsd(dist = dist, k = x)
+                CHI <- clusterSim::index.G1(t(b), verTmpCluster, d = dist, centrotypes = "medoids")
+                silhouette <- cluster::silhouette(verTmpCluster, dist)[,3] |> mean()# silhouette coefficients
+                if (CHI > optCHI) {
+                        optCHI <<- CHI
+                        optK <<- x
+                        verCluster <<- verTmpCluster
+                        Silhouette <<- silhouette
+                        }
+                list(CHI = CHI, silhouette = silhouette)
+                })
+        verCHI = vapply(ret, function(x) x[['CHI']], numeric(1)) #CHI verctor
+        verSilhouette = vapply(ret, function(x) x[['silhouette']], numeric(1)) #vector silhouette coefficients
         names(ret) <- verK
         names(verCluster) <- colnames(b)
         ret <- list(verCHI = verCHI,
@@ -86,18 +111,27 @@ estimate_k <- function(b, verK = 2:10) {
         ret
 }
 
-#' @description print verCHI
-#' @title print.verCHI
-#' @param verCHI estimate_k output
+#' print.verCHI
+#'
+#' print the optialmal numer of cluster, max CHI, and Silhouette
+#' and plot the Calinski-Harabasz (CH) Index and silhouette coefficients simultaneously.
+#'
+#' @param x estimate_k output
 #' @param verbose logical
+#' @param plotting logical
+#' @param cluster cluster result
+#' @param ... print
 #' @examples
 #' data(iris)
 #' ret <- estimate_k(b = t(iris[,1:4]), 1:10)
 #' ret
 #' @return no return
 #' @export
+#' @importFrom graphics lines text par
+#' @importFrom stats quantile
 
-print.verCHI <- function(verCHI, verbose = TRUE, plotting = TRUE, cluster) {
+print.verCHI <- function(x, ..., verbose = TRUE, plotting = TRUE, cluster) {
+        verCHI <- x
         if (!verbose){
                 sink(tempfile())
                 on.exit(sink())
@@ -129,13 +163,28 @@ print.verCHI <- function(verCHI, verbose = TRUE, plotting = TRUE, cluster) {
         invisible()
 }
 
-#' @description identify enterotype
-#' @title enterotyping
+#' enterotyping
+#'
+#' identifing enterotype basing the OTU abundance using
+#' the cluster anlysis refer to the XXX works.
+#'
 #' @param b bacterial abundance matrix
 #' @param cluster cluster vector
 #' @param threshold abundance threshold
 #' @return list
 #' @export
+#' @examples
+#'
+#' dat <- read.delim('http://enterotypes.org/ref_samples_abundance_MetaHIT.txt')
+#' dat <- impute::impute.knn(as.matrix(dat), k = 100)
+#' rest <- read.table(system.file('extdata', 'enterotype.txt', package = 'mbOmic'))
+#' rest <- rest[colnames(dat$data), ]
+#' res2 <- estimate_k(dat$data+0.001)
+#' table(res2$verOptCluster, rest$ET)
+#'
+#' ret=enterotyping(dat$data+0.01, res2$verOptCluster, threshold = 0.02)
+#' ret
+#'
 enterotyping <- function(b, cluster, threshold = 0.25) {
         vecBacter <- rownames(b)
         grp <- split(colnames(b), cluster)

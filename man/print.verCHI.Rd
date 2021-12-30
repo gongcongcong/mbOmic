@@ -4,18 +4,25 @@
 \alias{print.verCHI}
 \title{print.verCHI}
 \usage{
-\method{print}{verCHI}(verCHI, verbose = TRUE, plotting = TRUE, cluster)
+\method{print}{verCHI}(x, ..., verbose = TRUE, plotting = TRUE, cluster)
 }
 \arguments{
-\item{verCHI}{estimate_k output}
+\item{x}{estimate_k output}
+
+\item{...}{print}
 
 \item{verbose}{logical}
+
+\item{plotting}{logical}
+
+\item{cluster}{cluster result}
 }
 \value{
 no return
 }
 \description{
-print verCHI
+print the optialmal numer of cluster, max CHI, and Silhouette
+and plot the Calinski-Harabasz (CH) Index and silhouette coefficients simultaneously.
 }
 \examples{
 data(iris)

@@ -2,10 +2,20 @@
 % Please edit documentation in R/utilites.R
 \name{quiteRun}
 \alias{quiteRun}
-\title{quiteRun}
+\title{quiteRun
+
+Run expression in quite mode.}
 \usage{
 quiteRun(x)
 }
+\arguments{
+\item{x}{expression}
+}
+\value{
+no return
+}
 \description{
 quiteRun
+
+Run expression in quite mode.
 }

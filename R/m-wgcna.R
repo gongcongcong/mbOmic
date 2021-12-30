@@ -1,24 +1,53 @@
-#' @title coExpress
+#' coExpress
+#'
+#' `coExpress` identify the co-expression metabolites by
+#' performing the metabolites adjant matrix basing their
+#' relative abundace. This process was mainly implemented
+#' using the WGCNA package.
+#'
 #' @docType methods
 #' @author Congcong Gong
-#' @param object, mbSet class
-#' @param minN, integer the minimum number of sample
-#' @param power, integer, if the pickSoftThreshold function (WGCNA) can find appropriate power, this param is invalid
 #' @export
 #' @return network
-
+#' @param object mbSet class
+#' @param power integer if the pickSoftThreshold function (WGCNA) can find appropriate power, this param is invalid
+#' @param powerVec vector was passed to PickST function to get the power value
+#' @param threshold numeric as the threshold to filter power value
+#' @param message logical whether to show verbose info
+#' @param plot logical whether plot in PickST function
+#' @param ... additional arguments passed to WGCNA
+#' @examples
+#' library(data.table)
+#' path <- system.file('extdata', 'metabolites_and_genera.rda', package = 'mbOmic')
+#' load(path)
+#' object <-
+#'        mbSet(
+#'              m = metabolites,
+#'              b = genera
+#'              )
+#' res <- corr(object, method = 'spearman')
+#' net <- coExpress(object, minN = 2, power = 9, message = FALSE)
 setGeneric(name = 'coExpress',
            def =
-                   function(object, power = NULL, powerVec = 1:30,
+                   function(object, power = NULL, powerVec = seq_len(30),
                             threshold = 0.8, message = TRUE, plot = FALSE, ...) {
                            standardGeneric('coExpress')
                    })
 
-#' @title coExpress
+#' coExpress
+#'
 #' @importFrom WGCNA goodSamplesGenes blockwiseModules cor
+#' @param object mbSet class
+#' @param power integer, if the pickSoftThreshold function (WGCNA) can find appropriate power, this param is invalid
+#' @param powerVec vector was passed to PickST function to get the power value
+#' @param threshold numeric as the threshold to filter power value
+#' @param message logical, whether to show verbose info
+#' @param plot logical, whether plot in PickST function
+#' @param ... args passed to WGCNA
 #' @return network
-setMethod('coExpress', 'mbSet', function(object,power = NULL, powerVec,
-                                         threshold = 0.8, message = TRUE, plot = FALSE, ...){
+setMethod('coExpress', 'mbSet', function(object, power = NULL,
+                                         powerVec, threshold = 0.8,
+                                         message = TRUE, plot = FALSE, ...){
 
         if (!message){
                 sink(tempfile())
@@ -27,9 +56,9 @@ setMethod('coExpress', 'mbSet', function(object,power = NULL, powerVec,
         object <- clean_analytes(object)
         m <- m(object)
         mN <- m$rn
-        m <- m[, rn:=NULL]
+        m$rn <- NULL
         cat("\nOne: detect the power for softThreshold\n")
-        if (missing(powerVec)) powerVec <-  c(c(1:10), seq(from = 12, to=20, by=2))
+        if (missing(powerVec)) powerVec <-  c(seq_len(10), seq(from = 12, to=20, by=2))
         if (is.null(power)) {
                 pw <- quiteRun(
                         pickST(
@@ -56,26 +85,34 @@ setMethod('coExpress', 'mbSet', function(object,power = NULL, powerVec,
         names(res) <- c("Module","Size")
         cat("====> There are ", nrow(res), "modules were constructed: \n")
         apply(res, 1, function(x) cat("====|| ", x, "\n"))
-        #structure(net$colors, MEs = net$MEs, class = 'mb.module')
+        # structure(net$colors, MEs = net$MEs, class = 'mb.module')
         names(net$colors) <- mN
         net
 
 })
 
-#' @title pickST
-#' @description Automatic network construction and module detection by one-step method
+#' pickST
+#'
+#' Picking up the Soft threshold of metabolites abundance matrix.
+#'
 #' @importFrom WGCNA pickSoftThreshold
-#' @return power
+#' @return integer
+#' @importFrom graphics points text abline
+#' @param m data.table metabolites abundance
+#' @param threshold.d numeric rol
+#' @param threshold numeric threshold
+#' @param plot logical whether to plot
+#' @param powers vector
 
 pickST <-
         function(m, threshold.d = 0.05, threshold = 0.8, plot = TRUE,powers = NULL){
-                suppressWarnings(
+                quiteRun(
                         sft <- quiteRun(pickSoftThreshold(m,dataIsExpr = TRUE, powerVector = powers, verbose = 5))
                 )
-                powers <- sft$fitIndices[,1]
-                sft <- -sign(sft$fitIndices[,3])*sft$fitIndices[,2]
-                res <- which(abs(diff(sft)) <= threshold.d)+1
-                if (sum(sft[res]>=threshold)>0) {
+                powers <- sft$fitIndices[, 1]
+                sft <- -sign(sft$fitIndices[, 3])*sft$fitIndices[, 2]
+                res <- which(abs(diff(sft)) <= threshold.d) + 1
+                if (sum(sft[res] >= threshold) > 0) {
                         res <- res[which(sft[res]>=threshold)][1]
                         cat("\n Scale Free Topology Model Fit,signed R^2: ", sft[res], '\n')
                 } else {
@@ -98,7 +135,7 @@ pickST <-
                                 "\ntol: ", threshold.d,
                                 sep = ''
                         ))
-                        abline(h = threshold, col = 'blue', lty =2)
+                        abline(h = threshold, col = 'blue', lty = 2)
                 }
                 res
         }

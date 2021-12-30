@@ -2,10 +2,16 @@
 % Please edit documentation in R/generic.R
 \name{dim,mbSet-method}
 \alias{dim,mbSet-method}
-\title{dim}
+\title{dim.mbSet}
 \usage{
 \S4method{dim}{mbSet}(x)
 }
+\arguments{
+\item{x}{mbSet class}
+}
+\value{
+dimension
+}
 \description{
-dim
+Outputing dimension of `m` and `b`.
 }

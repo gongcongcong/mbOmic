@@ -7,12 +7,27 @@
 \S4method{coExpress}{mbSet}(
   object,
   power = NULL,
-  powerVec = 1:30,
+  powerVec = seq_len(30),
   threshold = 0.8,
   message = TRUE,
   plot = FALSE,
   ...
 )
+}
+\arguments{
+\item{object}{mbSet class}
+
+\item{power}{integer, if the pickSoftThreshold function (WGCNA) can find appropriate power, this param is invalid}
+
+\item{powerVec}{vector was passed to PickST function to get the power value}
+
+\item{threshold}{numeric as the threshold to filter power value}
+
+\item{message}{logical, whether to show verbose info}
+
+\item{plot}{logical, whether plot in PickST function}
+
+\item{...}{args passed to WGCNA}
 }
 \value{
 network

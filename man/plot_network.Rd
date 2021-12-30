@@ -5,41 +5,45 @@
 \title{plot_network}
 \usage{
 plot_network(
-    net = net,
-    corr = corr，
+    net,
+    corr,
     centrality_degree_mode = 'out',
-    threshold = 0.9
+    threshold = 0.9,
+    show_text = TRUE
 )
 }
 \arguments{
-\item{net, }{the result of function `wgcna`}
+\item{net}{result of function `wgcna`}
 
-\item{corr, }{the result of function `corr.test`}
+\item{corr}{result of function `corr.test`}
 
-\item{centrality_degree_mode, }{the mode for centrality_degress function}
+\item{centrality_degree_mode}{the mode for centrality_degress function}
 
-\item{threshold, }{the nodes whose centrality degree greater than the theshold will show labels}
+\item{threshold, }{nodes whose centrality degree greater than the theshold will show labels}
+
+\item{show_text}{logical whether add the nodes labels}
 }
 \value{
 ggraph
 }
 \description{
-plot network
+plotting the network of metabolites and OTU. Orange nodes represent the OTU, while the other color represent the metabolite. Same color metabolites nodes are constructed in the same modules.
 }
 \examples{
-\dontrun{
 library(data.table)
-path <- system.file('data',package = 'mbOmic')
-load(file.path(path,'metabolites_and_genera.rda'))
-object <-
-       mbSet(
-             m = metabolites,
-             b = genera
-             )
-res <- corr(object, method = 'spearman')
-net <- wgcna(object, minN = 2, power = 9,message = FALSE)
-plot_network(net, res[abs(rho)>=0.85])
-}
+path <- system.file('extdata', 'metabolites_and_genera.rda', package = 'mbOmic')
+load(path)
+mb <-
+     mbSet(
+           m = metabolites, b = genera
+           )
+           mb
+## Samples( 12 ):  BS1 BS2 BS3 BS4 BS5 BS6 SS1 SS2 SS3 SS4 SS5 SS6
+## number of OTU:  18
+## number of metabolites:  247
+net <- coExpress(mb,message = TRUE,threshold.d = 0.02, threshold = 0.8, power = 9)
+spearm <- corr(mb, method = 'spearman')
+plot_network(net, spearm[abs(rho) >= 0.75 & p <= 0.05], threshold = 0.75, show_text = FALSE)
 }
 \author{
 Congcong Gong

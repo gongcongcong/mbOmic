@@ -13,6 +13,21 @@ clean_analytes(object, m_thres = 2, b_thres = 2)
 
 \item{b_thres, }{integer, Removal of OTU only measured in b_thres of samples}
 }
+\value{
+mbSet object
+}
 \description{
-clean_analytes
+Remove unqualified metabolites and OTU which only
+measured in few samples.
+}
+\examples{
+library(data.table)
+path <- system.file('extdata', 'metabolites_and_genera.rda', package = 'mbOmic')
+load(path)
+object <-
+       mbSet(
+             m = metabolites,
+             b = genera
+             )
+clean_analytes(object)
 }

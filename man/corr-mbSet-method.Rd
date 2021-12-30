@@ -5,8 +5,20 @@
 \alias{corr,mbSet-method}
 \title{corr}
 \usage{
-\S4method{corr}{mbSet}(object, parallel = FALSE, ncore = 4, ...)
+\S4method{corr}{mbSet}(object, method = "spearman", parallel = FALSE, ncore = 4)
+}
+\arguments{
+\item{object}{mbSet class}
+
+\item{method}{character default is spearman}
+
+\item{parallel}{logical}
+
+\item{ncore}{integer number of core,default is 4}
+}
+\value{
+correlation matrix
 }
 \description{
-genetic methods to perform the correlation test
+genetic methods to perform the correlation test.
 }

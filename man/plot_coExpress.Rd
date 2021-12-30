@@ -4,16 +4,28 @@
 \alias{plot_coExpress}
 \title{plot_coExpress}
 \usage{
-plot_coExpress(net, ...)
+plot_coExpress(net)
+}
+\arguments{
+\item{net}{output of coExpress function}
 }
 \value{
 ploting
 }
 \description{
-plot_coExpress
+Plotting the dendro of metabolites modules.
 }
 \examples{
-\dontrun{
-plot_coExpress(net)
-}
+library(data.table)
+path <- system.file('extdata', 'metabolites_and_genera.rda', package = 'mbOmic')
+load(path)
+object <-
+       mbSet(
+             m = metabolites,
+             b = genera
+             )
+res <- corr(object, method = 'spearman')
+net <- coExpress(object, minN = 2, power = 9, message = FALSE)
+plot_network(net, res[abs(rho)>=0.85])
+
 }

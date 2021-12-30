@@ -6,9 +6,12 @@
 \usage{
 \S4method{show}{mbSet}(object)
 }
+\arguments{
+\item{object}{mbSet}
+}
 \value{
 print
 }
 \description{
-show
+show.
 }
