@@ -185,37 +185,46 @@ print.verCHI <- function(x, ..., verbose = TRUE, plotting = TRUE, cluster) {
 #' ret=enterotyping(dat$data+0.01, res2$verOptCluster, threshold = 0.02)
 #' ret
 #'
-enterotyping <- function(b, cluster, threshold = 0.25) {
+enterotyping <- function(b, cluster, threshold = 0.02) {
         vecBacter <- rownames(b)
         grp <- split(colnames(b), cluster)
+        samples <- names(cluster)
         # load("../data/lsGenus.Rda")
         # Firmicutes <- lsGenus$Firmicutes
         # FirmicutesIdx <- vecBacter %in% Firmicutes
-        FirmicutesIdx <- grepl("firmicutes", vecBacter, ignore.case = TRUE)
-        BacteroidesIdx <- grepl("bacteroides", vecBacter, ignore.case = TRUE)
-        PrevotellaIdx <- grepl("prevotella", vecBacter, ignore.case = TRUE)
+        RuminococcusIdx <- grepl("^ruminococcus$", vecBacter, ignore.case = TRUE)
+        BacteroidesIdx <- grepl("^bacteroides$", vecBacter, ignore.case = TRUE)
+        PrevotellaIdx <- grepl("^prevotella$", vecBacter, ignore.case = TRUE)
         dfMeans <- lapply(grp, function(x){
-                c(Bacteroides = mean(b[BacteroidesIdx, x], na.rm = TRUE),
-                     Prevotella = mean(b[PrevotellaIdx, x], na.rm = TRUE),
-                     Firmicutes = mean(b[FirmicutesIdx, x], na.rm = TRUE))
-
+                c(Bacteroides = mean(as.numeric(b[BacteroidesIdx, x]), na.rm = TRUE),
+                  Prevotella = mean(as.numeric(b[PrevotellaIdx, x]), na.rm = TRUE),
+                  Ruminococcus = mean(as.numeric(b[RuminococcusIdx, x]), na.rm = TRUE))
                 }) |> as.data.frame()
-        ret <- apply(dfMeans, 1, function(x){
-                maxValueIdx <- which.max(x)
-                if(length(maxValueIdx) != 1){
-                        return(NA_real_)
-                }
-                if (x[maxValueIdx] <= threshold)  maxValueIdx <- NA_real_
-                maxValueIdx
-        })
-        vecCluster <- unique(cluster)
-        vecClusterLeft <- setdiff(vecCluster, ret)
-        ret[is.na(ret)] <- vecClusterLeft[which.max(as.numeric(table(cluster))[vecClusterLeft])]
-        tmp <- names(ret)
-        names(tmp) <- ret
+        ret <- data.frame(
+                          max = apply(dfMeans, 1, max),
+                          which = apply(dfMeans, 1, which.max)
+                          )
+        ret$cluster <- NA
+        tmpDupIdx <- ret$which == ret$which[duplicated(ret$which)]
+        if (sum(tmpDupIdx) == 3) {
+                ret$cluster[which.max(ret$max)] <- paste0('cluster ', ret$which[which.max(ret$max)])
+        } else if (sum(tmpDupIdx) == 2) {
+                ret$cluster[!tmpDupIdx] <- paste0('cluster ', ret$which[!tmpDupIdx])
+                nm <- rownames(ret)[tmpDupIdx][which.max(ret$max[tmpDupIdx])]
+                ret[nm, 'cluster'] <- paste0('cluster ', ret[nm, 'which'])
+        } else {
+                ret$cluster <- paste0('cluster ', ret$which)
+        }
+        ret$cluster <- ifelse(ret$max < threshold, NA_character_, ret$cluster)
+        setDT(ret, keep.rownames = "Enterotype")
+        cluster <- data.table(Samples = names(cluster),
+                              which = cluster)
+        out <- merge(cluster, ret, on = 'which')
+        out$Enterotype <- ifelse(is.na(out$cluster), NA_character_, out$Enterotype)
+        uncluster <- samples[!samples %in% out$Samples]
         list(enterotypes = ret,
-             data = data.frame(samples = names(cluster),
-                               cluster=cluster,
-                               enterotype = tmp[as.character(cluster)]))
+             data = out[!is.na(out$Enterotype), c('Samples', 'Enterotype', 'cluster'), with = FALSE],
+             UnIdentifiedSamples = uncluster
+             )
 }
 

@@ -4,7 +4,7 @@
 \alias{enterotyping}
 \title{enterotyping}
 \usage{
-enterotyping(b, cluster, threshold = 0.25)
+enterotyping(b, cluster, threshold = 0.02)
 }
 \arguments{
 \item{b}{bacterial abundance matrix}

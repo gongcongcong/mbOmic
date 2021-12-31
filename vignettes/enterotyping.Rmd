@@ -31,9 +31,8 @@ table(res2$verOptCluster, rest$ET)
 ```
 
 ```{r}
-ret=enterotyping(dat$data+0.01, 
-                 res2$verOptCluster, 
-                 threshold = 0.02)
+ret=enterotyping(dat$data, 
+                 res2$verOptCluster) 
 ret
 ```
 
