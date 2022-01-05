@@ -26,10 +26,13 @@ cluster vector
 
 data(iris)
 ## using the matrix to cluster samples.
-res_cluster <- cluster_jsd(b=t(iris[,1:4]), k = 3)
+b <- bSet(b = data.table::as.data.table(t(iris[1:6, 1:4])),
+          Features = letters[1:4],
+          Samples = LETTERS[1:6])
+res_cluster <- cluster_jsd(b=b, k = 3)
 ## or using the resoult of dist_jsd
 ## dist <- dist_jsd(iris[, 1:4])
 ## res_cluster <- cluster_jsd(dist = iris[,1:4], k = 3)
-table(res_cluster, iris[, 5])
+table(res_cluster, iris[1:6, 5])
 
 }

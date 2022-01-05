@@ -11,18 +11,18 @@
 #' library(data.table)
 #' path <- system.file('extdata','metabolites_and_genera.rda',package = 'mbOmic')
 #' load(path)
-#' object <-
-#'        mbSet(
-#'              m = metabolites,
-#'              b = genera
-#'              )
-#' res <- corr(object, method = 'spearman')
+#' names(genera)[1] <- 'rn'
+#' names(metabolites)[1] <- 'rn'
+#' b <- bSet(b = genera)
+#' m <- mSet(m = metabolites)
+#' res <- corr(m, b, method = 'spearman')
 #' @export
-#' @param object mbSet class
+#' @param m mSet class
+#' @param b bSet class
 #' @param parallel logical
 #' @param ncore integer number of core,default is 4
 #' @param method character default is spearman
-setGeneric('corr', function(object, method = 'spearman', parallel = FALSE, ncore=4){
+setGeneric('corr', function(m, b, method = 'spearman', parallel = FALSE, ncore=4){
         standardGeneric('corr')
 })
 
@@ -32,26 +32,33 @@ setGeneric('corr', function(object, method = 'spearman', parallel = FALSE, ncore
 #' @description genetic methods to perform the correlation test.
 #'
 #' @importFrom parallel makeCluster stopCluster parLapply clusterEvalQ clusterExport
-#' @importFrom stats setNames
+#' @importFrom stats setNames p.adjust
 #' @importFrom data.table tstrsplit
 #' @docType methods
-#' @param object mbSet class
+#' @param m mSet class
+#' @param b bSet class
 #' @param parallel logical
 #' @param ncore integer number of core,default is 4
 #' @param method character default is spearman
 #' @return correlation matrix
-setMethod(f = 'corr', signature(object = 'mbSet'),
-          definition = function(object, method = 'spearman',
+setMethod(f = 'corr', signature = c(m='mSet', b='bSet'),
+          definition = function(m, b, method = 'spearman',
                                 parallel = FALSE, ncore=4){
-                  m <- m(object)
-                  mn <- m$rn
-                  samples <- mbSamples(object)
-                  m <- t(m[, samples, with = FALSE])
-                  colnames(m) <- mn
-                  b <- b(object)
-                  bn <- b$rn
-                  b <- t(b[, samples, with = FALSE])
-                  colnames(b) <- bn
+                  m_dt <- m@dt
+                  mn <- features(m)
+                  m_samples <- samples(m)
+                  b_dt <- b@dt
+                  bn <- features(b)
+                  b_samples <- samples(b)
+                  stopifnot("metabolites and OTU abundance matrix has no consistant samples" = identical(sort(m_samples), sort(b_samples)))
+
+                  samp <- intersect(m_samples, b_samples)
+                  m_dt <- t(m_dt[, samp, with = FALSE])
+                  colnames(m_dt) <- mn
+
+                  b_dt <- t(b_dt[, samp, with = FALSE])
+                  colnames(b_dt) <- bn
+
                   quiteCorr <- function(a, b){
                           options(warn=-1)
                           res <- psych::corr.test(a, b, method = method)
@@ -59,7 +66,7 @@ setMethod(f = 'corr', signature(object = 'mbSet'),
                           res <- cor2df(res)
                   }
                   if (!parallel) {
-                          res <- quiteCorr(b, m)
+                          res <- quiteCorr(b_dt, m_dt)
                   } else {
                           cat("Using parallel with ", ncore, "cores!\n")
                           cl <- makeCluster(ncore)
@@ -69,17 +76,18 @@ setMethod(f = 'corr', signature(object = 'mbSet'),
                                                library(magrittr, quietly = TRUE)
                                                library(data.table, quietly = TRUE)
                                        })
-                          clusterExport(cl, list('m','b'), envir = environment())
+                          clusterExport(cl, list('m_dt','b_dt', 'cor2df'), envir = environment())
 
                           res <-
-                                  parLapply(cl, colnames(b),
+                                  parLapply(cl, colnames(b_dt),
                                             fun = function(x){
-                                                    quiteCorr(setNames(data.frame(b[,x]),x),
-                                                              m)
+                                                    quiteCorr(setNames(data.frame(b_dt[,x]),x),
+                                                              m_dt)
                                             })
                           res <- do.call('rbind', res)
                   }
                   res[,c("b", "m") := tstrsplit(pair, split = " : ")]
+                  res$padj <- p.adjust(res$p, method = 'BH')
                   res[, c('b', 'm', 'rho', 'p', 'padj'), with = FALSE]
 
           })

@@ -5,10 +5,12 @@
 \alias{corr}
 \title{corr}
 \usage{
-corr(object, method = "spearman", parallel = FALSE, ncore = 4)
+corr(m, b, method = "spearman", parallel = FALSE, ncore = 4)
 }
 \arguments{
-\item{object}{mbSet class}
+\item{m}{mSet class}
+
+\item{b}{bSet class}
 
 \item{method}{character default is spearman}
 
@@ -27,10 +29,9 @@ each metabolites.
 library(data.table)
 path <- system.file('extdata','metabolites_and_genera.rda',package = 'mbOmic')
 load(path)
-object <-
-       mbSet(
-             m = metabolites,
-             b = genera
-             )
-res <- corr(object, method = 'spearman')
+names(genera)[1] <- 'rn'
+names(metabolites)[1] <- 'rn'
+b <- bSet(b = genera)
+m <- mSet(m = metabolites)
+res <- corr(m, b, method = 'spearman')
 }

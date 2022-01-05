@@ -5,12 +5,13 @@
 \title{dist_jsd
 
 Calculating Jensen-Shannon divergence basing the formulate
-\eqn{JSD(P || Q) = \sqrt{0.5 \times KLD (P||\frac{P + Q}{2}) + 0.5 \times KLD(Q||\frac{P+Q}{2})} }.}
+\eqn{JSD(P || Q) =
+      \sqrt{0.5 \times KLD (P||\frac{P + Q}{2}) + 0.5 \times KLD(Q||\frac{P+Q}{2})} }.}
 \usage{
 dist_jsd(b)
 }
 \arguments{
-\item{b}{bacterial abundance matrix}
+\item{b}{a `bSet` class}
 }
 \value{
 Jensen-Shannon divergence data frame
@@ -19,11 +20,16 @@ Jensen-Shannon divergence data frame
 dist_jsd
 
 Calculating Jensen-Shannon divergence basing the formulate
-\eqn{JSD(P || Q) = \sqrt{0.5 \times KLD (P||\frac{P + Q}{2}) + 0.5 \times KLD(Q||\frac{P+Q}{2})} }.
+\eqn{JSD(P || Q) =
+      \sqrt{0.5 \times KLD (P||\frac{P + Q}{2}) + 0.5 \times KLD(Q||\frac{P+Q}{2})} }.
 
 
 }
 \examples{
 data(iris)
-dist <- dist_jsd(iris[, 1:4])
+b <- data.table::as.data.table(iris[1:6, 1:4])
+b <- bSet(b = b,
+          Features = letters[1:6],
+          Samples = LETTERS[1:4])
+dist <- dist_jsd(b)
 }

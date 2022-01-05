@@ -21,15 +21,5 @@ identifing enterotype basing the OTU abundance using
 the cluster anlysis refer to the XXX works.
 }
 \examples{
-
 dat <- read.delim('http://enterotypes.org/ref_samples_abundance_MetaHIT.txt')
-dat <- impute::impute.knn(as.matrix(dat), k = 100)
-rest <- read.table(system.file('extdata', 'enterotype.txt', package = 'mbOmic'))
-rest <- rest[colnames(dat$data), ]
-res2 <- estimate_k(dat$data+0.001)
-table(res2$verOptCluster, rest$ET)
-
-ret=enterotyping(dat$data+0.01, res2$verOptCluster, threshold = 0.02)
-ret
-
 }

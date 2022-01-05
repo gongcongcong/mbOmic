@@ -20,13 +20,12 @@
 #' library(data.table)
 #' path <- system.file('extdata', 'metabolites_and_genera.rda', package = 'mbOmic')
 #' load(path)
-#' object <-
-#'        mbSet(
-#'              m = metabolites,
-#'              b = genera
-#'              )
-#' res <- corr(object, method = 'spearman')
-#' net <- coExpress(object, minN = 2, power = 9, message = FALSE)
+#' names(genera)[1] <- 'rn'
+#' names(metabolites)[1] <- 'rn'
+#' b <- bSet(b = genera)
+#' m <- mSet(m = metabolites)
+#' res <- corr(m, b, method = 'spearman')
+#' net <- coExpress(m, minN = 2, power = 9, message = FALSE)
 setGeneric(name = 'coExpress',
            def =
                    function(object, power = NULL, powerVec = seq_len(30),
@@ -45,24 +44,25 @@ setGeneric(name = 'coExpress',
 #' @param plot logical, whether plot in PickST function
 #' @param ... args passed to WGCNA
 #' @return network
-setMethod('coExpress', 'mbSet', function(object, power = NULL,
-                                         powerVec, threshold = 0.8,
-                                         message = TRUE, plot = FALSE, ...){
+setMethod('coExpress', 'Set', function(object, power = NULL,
+                                       powerVec, threshold = 0.8,
+                                       message = TRUE, plot = FALSE,
+                                       ...){
 
+        stopifnot("object should be mSet" = inherits(object, 'mSet'))
         if (!message){
                 sink(tempfile())
                 on.exit(sink())
         }
         object <- clean_analytes(object)
-        m <- m(object)
-        mN <- m$rn
-        m$rn <- NULL
+        dt <- object@dt
+        mN <- features(object)
         cat("\nOne: detect the power for softThreshold\n")
         if (missing(powerVec)) powerVec <-  c(seq_len(10), seq(from = 12, to=20, by=2))
         if (is.null(power)) {
                 pw <- quiteRun(
                         pickST(
-                                m,
+                                dt,
                                 plot = plot,
                                 threshold.d = 0.05,
                                 threshold = threshold,
@@ -77,7 +77,7 @@ setMethod('coExpress', 'mbSet', function(object, power = NULL,
         # id <- featureNames(mExpSet(object))
         cat("\nusing the power: ", pw, "to constructe net!\n")
         cat("\nTwo: Network construction and module detection was done\n")
-        net <-  quiteRun(blockwiseModules(datExpr = t(m),
+        net <-  quiteRun(blockwiseModules(datExpr = t(dt),
                                           power = pw, ...))
         res <- net$colors
         res <- res[res!='grey']

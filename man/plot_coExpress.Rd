@@ -19,13 +19,9 @@ Plotting the dendro of metabolites modules.
 library(data.table)
 path <- system.file('extdata', 'metabolites_and_genera.rda', package = 'mbOmic')
 load(path)
-object <-
-       mbSet(
-             m = metabolites,
-             b = genera
-             )
-res <- corr(object, method = 'spearman')
-net <- coExpress(object, minN = 2, power = 9, message = FALSE)
-plot_network(net, res[abs(rho)>=0.85])
+names(metabolites)[1] <- 'rn'
+m <- mSet(m = metabolites)
+net <- coExpress(m, minN = 2, power = 9, message = FALSE)
+plot_coExpress(net)
 
 }

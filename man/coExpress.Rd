@@ -43,13 +43,12 @@ using the WGCNA package.
 library(data.table)
 path <- system.file('extdata', 'metabolites_and_genera.rda', package = 'mbOmic')
 load(path)
-object <-
-       mbSet(
-             m = metabolites,
-             b = genera
-             )
-res <- corr(object, method = 'spearman')
-net <- coExpress(object, minN = 2, power = 9, message = FALSE)
+names(genera)[1] <- 'rn'
+names(metabolites)[1] <- 'rn'
+b <- bSet(b = genera)
+m <- mSet(m = metabolites)
+res <- corr(m, b, method = 'spearman')
+net <- coExpress(m, minN = 2, power = 9, message = FALSE)
 }
 \author{
 Congcong Gong

@@ -1,16 +1,22 @@
 #' @title dist_jsd
 #'
 #' Calculating Jensen-Shannon divergence basing the formulate
-#' \eqn{JSD(P || Q) = \sqrt{0.5 \times KLD (P||\frac{P + Q}{2}) + 0.5 \times KLD(Q||\frac{P+Q}{2})} }.
+#' \eqn{JSD(P || Q) =
+#'       \sqrt{0.5 \times KLD (P||\frac{P + Q}{2}) + 0.5 \times KLD(Q||\frac{P+Q}{2})} }.
 #'
 #' @title
-#' @param b bacterial abundance matrix
+#' @param b a `bSet` class
 #' @examples
 #' data(iris)
-#' dist <- dist_jsd(iris[, 1:4])
+#' b <- data.table::as.data.table(iris[1:6, 1:4])
+#' b <- bSet(b = b,
+#'           Features = letters[1:6],
+#'           Samples = LETTERS[1:4])
+#' dist <- dist_jsd(b)
 #' @return Jensen-Shannon divergence data frame
 #' @export
 dist_jsd <- function(b) {
+        stopifnot("b must be bSet class" = inherits(b, 'bSet'))
         KLD <- function(x, y)
                 sum(x * log(x / y))
         JSD <-
@@ -28,7 +34,7 @@ dist_jsd <- function(b) {
                         numeric(1)
                 )
         }
-        dist <- apply(b, 2, dist_, f = JSD, d = b)
+        dist <- apply(b@dt, 2, dist_, f = JSD, d = b@dt)
         dist <- as.data.frame(dist)
         class(dist) <- c("data.frame", "jsd")
         dist
@@ -48,11 +54,14 @@ dist_jsd <- function(b) {
 #'
 #' data(iris)
 #' ## using the matrix to cluster samples.
-#' res_cluster <- cluster_jsd(b=t(iris[,1:4]), k = 3)
+#' b <- bSet(b = data.table::as.data.table(t(iris[1:6, 1:4])),
+#'           Features = letters[1:4],
+#'           Samples = LETTERS[1:6])
+#' res_cluster <- cluster_jsd(b=b, k = 3)
 #' ## or using the resoult of dist_jsd
 #' ## dist <- dist_jsd(iris[, 1:4])
 #' ## res_cluster <- cluster_jsd(dist = iris[,1:4], k = 3)
-#' table(res_cluster, iris[, 5])
+#' table(res_cluster, iris[1:6, 5])
 #'
 #' @return cluster vector
 #' @export
@@ -73,10 +82,14 @@ cluster_jsd <- function(dist, b, k) {
 #' @return list
 #' @examples
 #' data(iris)
-#' ret <- estimate_k(b = t(iris[, 1:4]), 1:10)
+#' b <- bSet(b = data.table::as.data.table(t(iris[1:6, 1:4])),
+#'           Features = letters[1:4],
+#'           Samples = LETTERS[1:6])
+#' ret <- estimate_k(b = b, 2:3)
 #' @export
 estimate_k <- function(b, verK = 2:10) {
-        if (min(verK) <= 1) verK <- verK[verK >1]
+        stopifnot("b must be bSet class" = inherits(b, 'bSet'))
+        if (min(verK) <= 1) verK <- verK[verK > 1]
         verK <- sort(verK) #verctor, number of cluster
         dist <- dist_jsd(b) #matrix, jsd
         verCluster <- integer(ncol(b)) #cluster verctor using the optimal number
@@ -85,7 +98,7 @@ estimate_k <- function(b, verK = 2:10) {
         Silhouette <- 0 #silhouette coefficients with optimal number ofcluster
         ret <- lapply(verK, function(x) {
                 verTmpCluster <- cluster_jsd(dist = dist, k = x)
-                CHI <- clusterSim::index.G1(t(b), verTmpCluster, d = dist, centrotypes = "medoids")
+                CHI <- clusterSim::index.G1(t(b@dt), verTmpCluster, d = dist, centrotypes = "medoids")
                 silhouette <- cluster::silhouette(verTmpCluster, dist)[,3] |> mean()# silhouette coefficients
                 if (CHI > optCHI) {
                         optCHI <<- CHI
@@ -98,7 +111,7 @@ estimate_k <- function(b, verK = 2:10) {
         verCHI = vapply(ret, function(x) x[['CHI']], numeric(1)) #CHI verctor
         verSilhouette = vapply(ret, function(x) x[['silhouette']], numeric(1)) #vector silhouette coefficients
         names(ret) <- verK
-        names(verCluster) <- colnames(b)
+        names(verCluster) <- samples(b)
         ret <- list(verCHI = verCHI,
                     verK = verK,
                     verSilhouetteCoef = verSilhouette,
@@ -123,7 +136,10 @@ estimate_k <- function(b, verK = 2:10) {
 #' @param ... print
 #' @examples
 #' data(iris)
-#' ret <- estimate_k(b = t(iris[,1:4]), 1:10)
+#' b <- bSet(b = data.table::as.data.table(t(iris[1:6, 1:4])),
+#'           Features = letters[1:4],
+#'           Samples = LETTERS[1:6])
+#' ret <- estimate_k(b =b, 2:3)
 #' ret
 #' @return no return
 #' @export
@@ -174,21 +190,26 @@ print.verCHI <- function(x, ..., verbose = TRUE, plotting = TRUE, cluster) {
 #' @return list
 #' @export
 #' @examples
-#'
-#' dat <- read.delim('http://enterotypes.org/ref_samples_abundance_MetaHIT.txt')
-#' dat <- impute::impute.knn(as.matrix(dat), k = 100)
-#' rest <- read.table(system.file('extdata', 'enterotype.txt', package = 'mbOmic'))
-#' rest <- rest[colnames(dat$data), ]
-#' res2 <- estimate_k(dat$data+0.001)
-#' table(res2$verOptCluster, rest$ET)
-#'
-#' ret=enterotyping(dat$data+0.01, res2$verOptCluster, threshold = 0.02)
-#' ret
-#'
+#'dat <- read.delim('http://enterotypes.org/ref_samples_abundance_MetaHIT.txt')
+# dat <- impute::impute.knn(as.matrix(dat), k = 100)
+# dat <- as.data.frame(dat$data+0.001)
+# setDT(dat, keep.rownames = TRUE)
+# dat <- bSet(b =  dat)
+# rest <- read.table(system.file('extdata', 'enterotype.txt', package = 'mbOmic'))
+# rest <- rest[samples(dat),]
+# res2 <- estimate_k(dat)
+# ret <- enterotyping(dat, res2$verOptCluster)
+# ret
+
 enterotyping <- function(b, cluster, threshold = 0.02) {
-        vecBacter <- rownames(b)
-        grp <- split(colnames(b), cluster)
+        stopifnot("b must be bSet class" = inherits(b, 'bSet'))
+        vecBacter <- features(b)
+        grp <- split(samples(b), cluster)
         samples <- names(cluster)
+        dt <- b@dt
+        rownames(dt) <- features(b)
+        colnames(dt) <- samples(b)
+        b <- dt
         # load("../data/lsGenus.Rda")
         # Firmicutes <- lsGenus$Firmicutes
         # FirmicutesIdx <- vecBacter %in% Firmicutes
@@ -196,9 +217,9 @@ enterotyping <- function(b, cluster, threshold = 0.02) {
         BacteroidesIdx <- grepl("^bacteroides$", vecBacter, ignore.case = TRUE)
         PrevotellaIdx <- grepl("^prevotella$", vecBacter, ignore.case = TRUE)
         dfMeans <- lapply(grp, function(x){
-                c(Bacteroides = mean(as.numeric(b[BacteroidesIdx, x]), na.rm = TRUE),
-                  Prevotella = mean(as.numeric(b[PrevotellaIdx, x]), na.rm = TRUE),
-                  Ruminococcus = mean(as.numeric(b[RuminococcusIdx, x]), na.rm = TRUE))
+                c(Bacteroides = mean(as.numeric(b[BacteroidesIdx, x, with = FALSE]), na.rm = TRUE),
+                  Prevotella = mean(as.numeric(b[PrevotellaIdx, x, with = FALSE]), na.rm = TRUE),
+                  Ruminococcus = mean(as.numeric(b[RuminococcusIdx, x, with = FALSE]), na.rm = TRUE))
                 }) |> as.data.frame()
         ret <- data.frame(
                           max = apply(dfMeans, 1, max),

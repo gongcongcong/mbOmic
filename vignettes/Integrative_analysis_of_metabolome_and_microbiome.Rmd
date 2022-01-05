@@ -47,37 +47,23 @@ load(path)
 
 ### Construct `mbSet` object.
 
-`mbSet` is S4 class containing the metabolites and OTU abundance.
+`bSet` is S4 class containing the metabolites abundance matrix.
 
-We can use `mbSet` function to directly create `mbSet` class.
+We can use `bSet` function to directly create `bSet` class.
 
 ```{r}
-mb <-
-  mbSet(
-    m = metabolites,
-    b = genera
-  )
-mb
-# Samples( 12 ):  BS1 BS2 BS3 BS4 BS5 BS6 SS1 SS2 SS3 SS4 SS5 SS6 
-# number of OTU:  18 
-# number of metabolites:  247
+names(metabolites)[1] <- 'rn'
+m <- mSet(m = metabolites)
+m
 ```
 
-There are some extract function to extract information of a `mbSet`, such as `mbSamples`, `b`, and `m`.
+There are some function to get or set information of a `bSet`, such as `samples` and `features`.
 
-Extract the samples names from `mbSet` class by function `mbSamples`.
+Extract the samples names from `bSet` class by function `Samples`.
 
 ```{r}
-mbSamples(mb)
+samples(m)
 #[1] "BS1" "BS2" "BS3" "BS4" "BS5" "BS6" "SS1" "SS2" "SS3" "SS4" "SS5" "SS6"
-```
-
-```{r}
-bacteria <- b(mb)
-metabolites <- m(mb)
-cat("The mb object contains", nrow(bacteria), 
-    "generas and", nrow(metabolites), "metabolites\n")
-#The mb object contains 18 generas and 247 metabolites
 ```
 
 ### Remove bad analytes (OTU and metatoblites)
@@ -85,21 +71,21 @@ cat("The mb object contains", nrow(bacteria),
 Removal of analytes only measured in \<2 of samples can perform by `clean_analytes`.
 
 ```{r}
-mb <- clean_analytes(mb,m_thres = 2,b_thres = 2)
+m <- clean_analytes(m, fea_num = 2)
 ```
 
 ### Generate metabolite module
 
 `mbOmic` can generate metabolite module by `coExpress` function. The `coExpress` function is the encapsulation of one-step network construction and module detection of `WGCNA` package. The `coExpress` function firstly pick up the soft-threshold. The `threshold.d` and `threshold` parameters are used to detect whether is $R^2$ changing and appropriate.
 
-```{r, fig.width= 7, fig.height= 6}
+```{r, fig.width= 6, fig.height= 5}
 net <- try({
-  coExpress(mb,message = TRUE,threshold.d = 0.02, threshold = 0.8, plot = TRUE)
+  coExpress(m,message = TRUE,threshold.d = 0.02, threshold = 0.8, plot = TRUE)
 })
 class(net)
 ```
 
-If you can't get a good scale-free topology index no matter how high set the soft-thresholding power, you can directly set the power value by the parameter `power`. The appropriate soft-thresholding power can be chosen based on the number of samples as in the table below (recommend by `WGCNA` package).
+If you can't get a good scale-free topology index no matter how high set the soft-thresholding power, you can directly set the power value by the parameter `power`, **but should be looked into carefully**. The appropriate soft-thresholding power can be chosen based on the number of samples as in the table below (recommend by `WGCNA` package).
 
 | **Number of samples** | **Unsigned and signed hybrid networks** | **Signed networks** |
 |:---------------------:|:---------------------------------------:|:-------------------:|
@@ -109,12 +95,12 @@ If you can't get a good scale-free topology index no matter how high set the sof
 |         \>40          |                    6                    |         12          |
 
 ```{r}
-net <- coExpress(mb,message = TRUE,threshold.d = 0.02, threshold = 0.8, power = 9)
+net <- coExpress(m,message = TRUE,threshold.d = 0.02, threshold = 0.8, power = 9)
 ```
 
 Result Visualization is performed by function `plot_coExpress`.
 
-```{r, fig.align='center', fig.width= 7, fig.height= 6}
+```{r, fig.align='center', fig.width= 5, fig.height= 4}
 plot_coExpress(net)
 ```
 
@@ -123,8 +109,12 @@ plot_coExpress(net)
 you can calculate the correlation between metabolites and OTUs by `corr` function. It return a data table containing `rho`, `p value`, and `adjust p value`. Moreover, the `corr` can run in parallel mode.
 
 ```{r}
-spearm <- corr(mb, method = 'spearman')
-head(spearm)
+b <- genera
+names(b)[1] <- 'rn'
+b <- bSet(b=b)
+spearm <- corr(m = m, b = b, method = 'spearman')
+# head(spearm)
+spearm[p<=0.001]
 ```
 
 ### plot the network
@@ -132,13 +122,13 @@ head(spearm)
 Finally, you can vaisulize the network by `plot_network` function, taking the `coExpress`and `corr` output. The orange nodes correspondes to OTU(genera)).
 
 
-```{r, fig.align='center', fig.width= 7, fig.height= 6}
-plot_network(net, spearm[abs(rho) >= 0.75 & p <= 0.05], threshold = 0.75, show_text = FALSE)
+```{r, fig.align='center', fig.width= 6, fig.height= 5, dpi=150}
+plot_network(net, spearm[abs(rho) >= 0.8 & p <= 0.001], threshold = 0.9, show_text = FALSE)
 ```
 
 
-```{r, fig.align='center', fig.width= 7, fig.height= 6}
-plot_network(net, spearm[abs(rho) >= 0.75 & padj <= 0.05], threshold = 0.75)
+```{r, fig.align='center', fig.width= 6, fig.height= 5, dpi=150}
+plot_network(net, spearm[abs(rho) >= 0.8 & p <= 0.001], threshold = 0.9)
 ```
 
 ## SessionInfo

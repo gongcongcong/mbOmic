@@ -21,5 +21,8 @@ Calinski-Harabasz (CH) Index and silhouette coefficients.
 }
 \examples{
 data(iris)
-ret <- estimate_k(b = t(iris[, 1:4]), 1:10)
+b <- bSet(b = data.table::as.data.table(t(iris[1:6, 1:4])),
+          Features = letters[1:4],
+          Samples = LETTERS[1:6])
+ret <- estimate_k(b = b, 2:3)
 }

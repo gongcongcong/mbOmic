@@ -1,25 +1,14 @@
----
-title: "enterotyping"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{enterotyping}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
-```{r, include = FALSE}
+## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-```
 
-```{r setup}
+## ----setup--------------------------------------------------------------------
 library(mbOmic)
 library(data.table)
-```
 
-```{r}
+## -----------------------------------------------------------------------------
 dat <- read.delim('http://enterotypes.org/ref_samples_abundance_MetaHIT.txt')
 dat <- impute::impute.knn(as.matrix(dat), k = 100)
 dat <- as.data.frame(dat$data+0.001) 
@@ -28,20 +17,15 @@ dat <- bSet(b =  dat)
 rest <- read.table(system.file('extdata', 'enterotype.txt', package = 'mbOmic'))
 rest <- rest[samples(dat),]
 res2 <- estimate_k(dat)
-```
 
-```{r}
+## -----------------------------------------------------------------------------
 table(res2$verOptCluster, rest$ET)
-```
 
-```{r}
+## -----------------------------------------------------------------------------
 ret=enterotyping(dat, 
                  res2$verOptCluster) 
 ret
-```
 
-
-## SessionInfo
-```{r}
+## -----------------------------------------------------------------------------
 devtools::session_info()
-```
+

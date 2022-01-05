@@ -33,17 +33,13 @@ plotting the network of metabolites and OTU. Orange nodes represent the OTU, whi
 library(data.table)
 path <- system.file('extdata', 'metabolites_and_genera.rda', package = 'mbOmic')
 load(path)
-mb <-
-     mbSet(
-           m = metabolites, b = genera
-           )
-           mb
-## Samples( 12 ):  BS1 BS2 BS3 BS4 BS5 BS6 SS1 SS2 SS3 SS4 SS5 SS6
-## number of OTU:  18
-## number of metabolites:  247
-net <- coExpress(mb,message = TRUE,threshold.d = 0.02, threshold = 0.8, power = 9)
-spearm <- corr(mb, method = 'spearman')
-plot_network(net, spearm[abs(rho) >= 0.75 & p <= 0.05], threshold = 0.75, show_text = FALSE)
+names(genera)[1] <- 'rn'
+names(metabolites)[1] <- 'rn'
+b <- bSet(b = genera)
+m <- mSet(m = metabolites)
+res <- corr(m, b, method = 'spearman')
+net <- coExpress(m, minN = 2, power = 9, message = FALSE)
+plot_network(net, res[abs(rho)>=0.85])
 }
 \author{
 Congcong Gong
