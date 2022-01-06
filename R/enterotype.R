@@ -108,8 +108,8 @@ estimate_k <- function(b, verK = 2:10) {
                         }
                 list(CHI = CHI, silhouette = silhouette)
                 })
-        verCHI = vapply(ret, function(x) x[['CHI']], numeric(1)) #CHI verctor
-        verSilhouette = vapply(ret, function(x) x[['silhouette']], numeric(1)) #vector silhouette coefficients
+        verCHI <-  vapply(ret, function(x) x[['CHI']], numeric(1)) #CHI verctor
+        verSilhouette  <-  vapply(ret, function(x) x[['silhouette']], numeric(1)) #vector silhouette coefficients
         names(ret) <- verK
         names(verCluster) <- samples(b)
         ret <- list(verCHI = verCHI,
@@ -154,12 +154,12 @@ print.verCHI <- function(x, ..., verbose = TRUE, plotting = TRUE, cluster) {
         }
         par(mfrow = c(1, 2))
         n <- length(verCHI$verK)
-        cat("optimal number of cluster: ", verCHI$optK, "\n")
-        cat("Max CHI: ", verCHI$optCHI, "\n")
-        cat("Silhouette: ", verCHI$Silhouette, "\n")
+        message("optimal number of cluster: ", verCHI$optK, "\n")
+        message("Max CHI: ", verCHI$optCHI, "\n")
+        message("Silhouette: ", verCHI$Silhouette, "\n")
         if (!missing(cluster)){
-                cat("\nConfusion Matrix: \n")
-                print(table(cluster, verCHI$verOptCluster))
+                message("\nConfusion Matrix: \n")
+                message(table(cluster, verCHI$verOptCluster))
         }
         if (plotting) {
                 #plot CHI

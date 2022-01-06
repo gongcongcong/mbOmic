@@ -25,7 +25,7 @@ clean_analytes <-
                 index <- apply(dt,
                                1,
                                function(x) sum(x != 0) > fea_num)
-                cat(sum(!index), "features removed: ", features(object)[!index], '\n')
+                message(sum(!index), "features removed: ", features(object)[!index], '\n')
 
                 object[index]
         }
