@@ -144,3 +144,81 @@ Finally, you can vaisulize the network by `plot_network` function, taking the `c
 plot_network(net, corr_spearman[abs(rho)>=0.85])
 ```
 ![](https://raw.githubusercontent.com/gongcongcong/mbOmic/master/inst/doc/network.svg)
+
+### identification of enterotype
+
+Construct `bSet` class using the OTU abundance matrix in genera level.
+
+``` r
+dat <- read.delim('http://enterotypes.org/ref_samples_abundance_MetaHIT.txt')
+dat <- impute::impute.knn(as.matrix(dat), k = 100)
+dat <- as.data.frame(dat$data+0.001) 
+setDT(dat, keep.rownames = TRUE)
+dat <- bSet(b =  dat)
+dat
+
+# 1. Features( 278 ): 
+# 	 Bacteroides Prevotella Eubacterium Faecalibacterium Alistipes ...
+# 2. Samples( 51 ): 
+# 	 MH0277 MH0087 MH0156 MH0444 MH0333 ...
+# 3. Top 5 Samples data:
+# [1] 1 2 3 4 5
+```
+
+
+Then estimating the approate numbers of cluster can implement by `estimate_k` function.
+``` r
+res2 <- estimate_k(dat)
+res2
+# optimal number of cluster:  4 
+# Max CHI:  164.6422 
+# Silhouette:  0.1814455 
+```
+![](https://raw.githubusercontent.com/gongcongcong/mbOmic/master/inst/doc/verCHI.svg)
+
+Enterotype of samples validates the result of `estimate_k`.
+
+``` r
+rest <- read.table(system.file('extdata', 'enterotype.txt', package = 'mbOmic'))
+rest <- rest[samples(dat),]
+table(res2$verOptCluster, rest$ET)
+#   ET_B ET_F ET_P
+# 1    0   21   19
+# 2   67    5    0
+# 3    0    0   40
+# 4    3  123    0
+```
+
+`enterotyping` function can estimate the enterotype using the `bSet` class.
+
+``` r
+ret=enterotyping(dat, res2$verOptCluster) 
+ret
+
+# $enterotypes
+#      Enterotype        max which   cluster
+# 1:  Bacteroides 0.36724946     2 cluster 2
+# 2:   Prevotella 0.29692944     3 cluster 3
+# 3: Ruminococcus 0.02416713     4 cluster 4
+# 
+# $data
+#      Samples   Enterotype   cluster
+#   1:  MH0087  Bacteroides cluster 2
+#   2:  MH0156  Bacteroides cluster 2
+#   3:  MH0444  Bacteroides cluster 2
+#   4:  MH0333  Bacteroides cluster 2
+#   5:  MH0233  Bacteroides cluster 2
+#  ---                               
+# 234:  MH0012 Ruminococcus cluster 4
+# 235:  MH0415 Ruminococcus cluster 4
+# 236:  MH0457 Ruminococcus cluster 4
+# 237:  MH0442 Ruminococcus cluster 4
+# 238:  MH0448 Ruminococcus cluster 4
+# 
+# $UnIdentifiedSamples
+#  [1] "MH0277" "MH0161" "MH0046" "MH0175" "MH0152" "MH0104" "MH0151" "MH0189"
+#  [9] "MH0030" "MH0157" "MH0063" "MH0075" "MH0141" "MH0169" "MH0050" "MH0286"
+# [17] "MH0096" "MH0053" "MH0217" "MH0098" "MH0009" "MH0197" "MH0065" "MH0173"
+# [25] "MH0168" "MH0070" "MH0077" "MH0288" "MH0200" "MH0031" "MH0183" "MH0132"
+# [33] "MH0144" "MH0124" "MH0430" "MH0276" "MH0407" "MH0428" "MH0126" "MH0447"
+```
