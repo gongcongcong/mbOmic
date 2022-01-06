@@ -17,6 +17,8 @@ The `mbOmic` package contains a set of analysis functions for microbiomics and m
 
 [^1]: McHardy, I. H., Goudarzi, M., Tong, M., Ruegger, P. M., Schwager, E., Weger, J. R., Graeber, T. G., Sonnenburg, J. L., Horvath, S., Huttenhower, C., McGovern, D. P., Fornace, A. J., Borneman, J., & Braun, J. (2013). Integrative analysis of the microbiome and metabolome of the human intestinal mucosal surface reveals exquisite inter-relationships. *Microbiome*, *1*(1), 17. <https://doi.org/10.1186/2049-2618-1-17>
 
+![](https://raw.githubusercontent.com/gongcongcong/mbOmic/master/inst/doc/workflow.svg)
+
 ## Example
 
 Load metabolites and OTU data of plant.[^2] The OTU had been binned into genera level and were save as the metabolites_and_genera.rda file
