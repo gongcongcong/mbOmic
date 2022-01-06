@@ -1,0 +1,3 @@
+- add enterotype to the network of metabolites and OTU
+- add food/diet module and link it to the gut OTU and gut microbiota metabolites module;
+- Establish three modules and their relationship: gut microbiota (OTU); gut microbiota metabolites; food/diet; 
