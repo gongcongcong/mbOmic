@@ -116,7 +116,7 @@ Result Visualization is performed by function `plot_coExpress`.
 ``` r
 plot_coExpress(net)
 ```
-![](https://github.org/gongcongcong/mbOmic/master/inst/doc/cluster_dendrogram.svg)
+![](https://raw.githubusercontent.com/gongcongcong/mbOmic/master/inst/doc/cluster_dendrogram.svg)
 
 ### Calculate the Spearman metabolite-genera correlation
 
@@ -141,4 +141,4 @@ Finally, you can vaisulize the network by `plot_network` function, taking the `c
 ``` r
 plot_network(net, corr_spearman[abs(rho)>=0.85])
 ```
-![](https://github.org/gongcongcong/mbOmic/master/inst/doc/network.svg)
+![](https://raw.githubusercontent.com/gongcongcong/mbOmic/master/inst/doc/network.svg)
