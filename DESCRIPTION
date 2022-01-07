@@ -20,6 +20,7 @@ RoxygenNote: 7.1.2
 Imports:
         tidygraph,
         parallel, 
+	doParallel,
         psych, 
         WGCNA, 
         data.table, 

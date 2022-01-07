@@ -34,6 +34,7 @@ setGeneric('corr', function(m, b, method = 'spearman', parallel = FALSE, ncore=4
 #' @importFrom parallel makeCluster stopCluster parLapply clusterEvalQ clusterExport
 #' @importFrom stats setNames p.adjust
 #' @importFrom data.table tstrsplit
+#' @importFrom doParallel registerDoParallel
 #' @docType methods
 #' @param m mSet class
 #' @param b bSet class
@@ -68,7 +69,8 @@ setMethod(f = 'corr', signature = c(m='mSet', b='bSet'),
                   if (!parallel) {
                           res <- quiteCorr(b_dt, m_dt)
                   } else {
-                          cat("Using parallel with ", ncore, "cores!\n")
+                          message("Using parallel with ", ncore, "cores!\n")
+			  registerDoParallel(cores = ncore)
                           cl <- makeCluster(ncore)
                           on.exit(stopCluster(cl))
                           clusterEvalQ(cl,
