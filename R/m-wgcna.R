@@ -57,8 +57,10 @@ setMethod('coExpress', 'Set', function(object, power = NULL,
         object <- clean_analytes(object)
         dt <- object@dt
         mN <- features(object)
-        cat("\nOne: detect the power for softThreshold\n")
-        if (missing(powerVec)) powerVec <-  c(seq_len(10), seq(from = 12, to=20, by=2))
+        message("\nOne: detect the power for softThreshold\n")
+        if (missing(powerVec)) {
+                powerVec <-  c(seq_len(10), seq(from = 12, to=20, by=2))
+                }
         if (is.null(power)) {
                 pw <- quiteRun(
                         pickST(
@@ -75,15 +77,15 @@ setMethod('coExpress', 'Set', function(object, power = NULL,
                 stop("No power detected! pls set the power parameter\n")
         }
         # id <- featureNames(mExpSet(object))
-        cat("\nusing the power: ", pw, "to constructe net!\n")
-        cat("\nTwo: Network construction and module detection was done\n")
+        message("\nusing the power: ", pw, "to constructe net!\n")
+        message("\nTwo: Network construction and module detection was done\n")
         net <-  quiteRun(blockwiseModules(datExpr = t(dt),
                                           power = pw, ...))
         res <- net$colors
         res <- res[res!='grey']
         res <- data.frame(table(res))
         names(res) <- c("Module","Size")
-        cat("====> There are ", nrow(res), "modules were constructed: \n")
+        message("====> There are ", nrow(res), "modules were constructed: \n")
         apply(res, 1, function(x) cat("====|| ", x, "\n"))
         # structure(net$colors, MEs = net$MEs, class = 'mb.module')
         names(net$colors) <- mN
