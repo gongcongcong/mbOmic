@@ -25,7 +25,7 @@ plot_coExpress <-
 #' plotting the network of metabolites and OTU. Orange nodes represent the OTU, while the other color represent the metabolite. Same color metabolites nodes are constructed in the same modules.
 #'
 #' @export
-#' @param net result of function `wgcna`
+#' @param net result of function `coExpress`
 #' @param corr result of function `corr.test`
 #' @param return whether return the igraph
 #' @param interaction plot method

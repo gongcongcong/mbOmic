@@ -7,7 +7,7 @@
 plot_network(net, corr, seed = 123, return = FALSE, interaction = TRUE)
 }
 \arguments{
-\item{net}{result of function `wgcna`}
+\item{net}{result of function `coExpress`}
 
 \item{corr}{result of function `corr.test`}
 
