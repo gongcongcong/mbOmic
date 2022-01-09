@@ -29,9 +29,10 @@ plot_coExpress <-
 #' @param corr result of function `corr.test`
 #' @param return whether return the igraph
 #' @param interaction plot method
+#' @param seed set seed for layout in interaction ploting
 #' @author Congcong Gong
-#' @return igraph
-#' @importFrom igraph V graph_from_data_frame plot.igraph degree layout_with_kk
+#' @return  igraph or graph
+#' @importFrom igraph V graph_from_data_frame plot.igraph degree "V<-" layout_with_kk
 #' @importFrom visNetwork toVisNetworkData visNetwork visGroups visLegend visIgraphLayout
 #' @examples
 #' library(data.table)
@@ -61,11 +62,11 @@ plot_network <-
                 if (interaction) {
                         visData <- toVisNetworkData(g)
                         visData$nodes$group <-
-                                ifelse(visData$nodes$id %in% spearm$b,
+                                ifelse(visData$nodes$id %in% corr$b,
                                        "OTU",
                                        "metabolites")
                         visData$nodes$shape <-
-                                ifelse(visData$nodes$id %in% spearm$b,
+                                ifelse(visData$nodes$id %in% corr$b,
                                        "star",
                                        "dot")
                         visData$nodes$value <- visData$nodes$size*100

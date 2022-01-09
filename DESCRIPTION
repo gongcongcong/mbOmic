@@ -18,7 +18,6 @@ BugReports: https://github.com/gongcongcong/mbOmic/issues
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 Imports:
-        tidygraph,
         parallel, 
         doParallel,
         psych, 
@@ -26,7 +25,6 @@ Imports:
         data.table, 
         igraph, 
         visNetwork,
-        ggplot2,
         cluster,
         clusterSim,
         methods,

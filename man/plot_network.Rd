@@ -11,12 +11,14 @@ plot_network(net, corr, seed = 123, return = FALSE, interaction = TRUE)
 
 \item{corr}{result of function `corr.test`}
 
+\item{seed}{set seed for layout in interaction ploting}
+
 \item{return}{whether return the igraph}
 
 \item{interaction}{plot method}
 }
 \value{
-igraph
+igraph or graph
 }
 \description{
 plotting the network of metabolites and OTU. Orange nodes represent the OTU, while the other color represent the metabolite. Same color metabolites nodes are constructed in the same modules.

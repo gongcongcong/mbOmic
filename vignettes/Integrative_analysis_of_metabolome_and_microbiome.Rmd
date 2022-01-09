@@ -130,7 +130,7 @@ plot_network(net, spearm[abs(rho) >= 0.8 & p <= 0.001], interaction = FALSE)
 
 
 ```{r, fig.align='center', fig.width= 6, fig.height= 5, dpi=150}
-tmp =plot_network(net, spearm[abs(rho) >= 0.8 & p <= 0.001], seed = 123, interaction = T, return =  T)
+tmp =plot_network(net, spearm[abs(rho) >= 0.8 & p <= 0.001], seed = 123, interaction = TRUE, return =  TRUE)
 # visSave(tmp, file = '../inst/doc/network2.html')
 ```
 
