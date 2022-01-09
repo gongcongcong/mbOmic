@@ -24,27 +24,15 @@ plot_coExpress <-
 #'
 #' plotting the network of metabolites and OTU. Orange nodes represent the OTU, while the other color represent the metabolite. Same color metabolites nodes are constructed in the same modules.
 #'
-#' @importFrom tidygraph mutate as_tbl_graph centrality_degree
-#' @import ggraph
 #' @export
 #' @param net result of function `wgcna`
 #' @param corr result of function `corr.test`
-#' @param centrality_degree_mode the mode for centrality_degress function
-#' @param threshold, nodes whose centrality degree greater than the theshold will show labels
-#' @param show_text logical whether add the nodes labels
+#' @param return whether return the igraph
+#' @param interaction plot method
 #' @author Congcong Gong
-#' @usage
-#' plot_network(
-#'     net,
-#'     corr,
-#'     centrality_degree_mode = 'out',
-#'     threshold = 0.9,
-#'     show_text = TRUE
-#' )
-#' @return ggraph
-#' @importFrom ggplot2 aes coord_fixed scale_color_manual labs
-#' @importFrom stats quantile
-#' @importFrom tidygraph mutate
+#' @return igraph
+#' @importFrom igraph V graph_from_data_frame plot.igraph degree layout_with_kk
+#' @importFrom visNetwork toVisNetworkData visNetwork visGroups visLegend visIgraphLayout
 #' @examples
 #' library(data.table)
 #' path <- system.file('extdata', 'metabolites_and_genera.rda', package = 'mbOmic')
@@ -57,32 +45,50 @@ plot_coExpress <-
 #' net <- coExpress(m, minN = 2, power = 9, message = FALSE)
 #' plot_network(net, res[abs(rho)>=0.85])
 plot_network <-
-        function(net, corr, centrality_degree_mode = 'out',threshold=0.9, show_text = TRUE){
-
-                bN <- as.character(unique(corr$b))
-                anno_c <- c(rep('orange',length(bN)),
-                            as.character(interaction(net$colors, 'module', sep =' ')))
-                names(anno_c) <- c(bN, names(net$colors))
-                g <- as_tbl_graph(corr)
-                g <- mutate(g, `centrality degree`=centrality_degree(mode = centrality_degree_mode),
-                               key=anno_c[name],
-                               label = ifelse(`centrality degree` >= quantile(`centrality degree`,threshold), name, ''))
-
-                aes_col <- gsub(' module', '', unique(anno_c))
-                names(aes_col) <- unique(anno_c)
-                g <- ggraph(g, 'kk') +
-                        geom_edge_link() +
-                        geom_node_point(aes(colour = factor(key),
-                                            size = `centrality degree`)) +
-                        coord_fixed() +
-                        labs(color = '') +
-                        theme_graph(foreground = 'steelblue', fg_text_colour = 'white', base_family = 'Helvetica')+
-                        scale_color_manual(values = aes_col)
-                if (show_text) {
-                        g <- g + geom_node_text(aes(label=label), size = 2,
-                                                color = 'darkblue', fontface = 'bold')
+        function(net, corr, seed = 123, return = FALSE, interaction = TRUE){
+                b_n <- unique(corr$b)
+                m_n <- unique(corr$m)
+                nodes <- c(b_n, m_n)
+                nodesCol <-
+                        c(rep('orange', length(b_n)), net$colors)
+                names(nodesCol)[seq_along(b_n)] <- b_n
+                g <- graph_from_data_frame(corr[, c("m", "b"), with = FALSE], directed = FALSE)
+                V(g)$shape <- ifelse(V(g)$name %in% corr$b,
+                                     "sphere",
+                                     "circle")
+                V(g)$size <- degree(g, mode = 'all')
+                V(g)$color <- nodesCol[V(g)$name]
+                if (interaction) {
+                        visData <- toVisNetworkData(g)
+                        visData$nodes$group <-
+                                ifelse(visData$nodes$id %in% spearm$b,
+                                       "OTU",
+                                       "metabolites")
+                        visData$nodes$shape <-
+                                ifelse(visData$nodes$id %in% spearm$b,
+                                       "star",
+                                       "dot")
+                        visData$nodes$value <- visData$nodes$size*100
+                        nodes <- data.frame(
+                                label = c("OTU", paste0("Module: ", unique(net$colors))),
+                                shape = c("star", rep("dot", length(unique(net$colors)))),
+                                color = c("orange",unique(net$colors))
+                        )
+                        out <- visNetwork(visData$nodes, visData$edges) |>
+                                visIgraphLayout(smooth = TRUE, type = 'full', layout = 'layout_with_kk') |>
+                                visLegend(useGroups = FALSE,
+                                          addNodes = nodes)
+                        print(out)
+                        if (return) {
+                                out
+                        }
+                        } else {
+                                plot.igraph(g, vertex.label="", layout = layout_with_kk)
+                                if (return) {
+                                        g
+                                }
                 }
-                g
+
         }
 
 

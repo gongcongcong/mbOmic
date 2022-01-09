@@ -4,27 +4,19 @@
 \alias{plot_network}
 \title{plot_network}
 \usage{
-plot_network(
-    net,
-    corr,
-    centrality_degree_mode = 'out',
-    threshold = 0.9,
-    show_text = TRUE
-)
+plot_network(net, corr, seed = 123, return = FALSE, interaction = TRUE)
 }
 \arguments{
 \item{net}{result of function `wgcna`}
 
 \item{corr}{result of function `corr.test`}
 
-\item{centrality_degree_mode}{the mode for centrality_degress function}
+\item{return}{whether return the igraph}
 
-\item{threshold, }{nodes whose centrality degree greater than the theshold will show labels}
-
-\item{show_text}{logical whether add the nodes labels}
+\item{interaction}{plot method}
 }
 \value{
-ggraph
+igraph
 }
 \description{
 plotting the network of metabolites and OTU. Orange nodes represent the OTU, while the other color represent the metabolite. Same color metabolites nodes are constructed in the same modules.

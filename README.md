@@ -118,6 +118,7 @@ Result Visualization is performed by function `plot_coExpress`.
 ``` r
 plot_coExpress(net)
 ```
+
 ![](https://raw.githubusercontent.com/gongcongcong/mbOmic/master/inst/doc/cluster_dendrogram.svg)
 
 ### Calculate the Spearman metabolite-genera correlation
@@ -141,9 +142,16 @@ head(corr_spearman)
 Finally, you can vaisulize the network by `plot_network` function, taking the `coExpress`and `corr` output. The orange nodes correspondes to OTU(genera).
 
 ``` r
+plot_network(net, corr_spearman[abs(rho)>=0.85], interaction = FALSE)
+```
+
+![](https://raw.githubusercontent.com/gongcongcong/mbOmic/master/inst/doc/network1.svg)
+
+``` r
 plot_network(net, corr_spearman[abs(rho)>=0.85])
 ```
-![](https://raw.githubusercontent.com/gongcongcong/mbOmic/master/inst/doc/network.svg)
+
+![](https://raw.githubusercontent.com/gongcongcong/mbOmic/master/inst/doc/network2.png)
 
 ### identification of enterotype
 
@@ -158,15 +166,15 @@ dat <- bSet(b =  dat)
 dat
 
 # 1. Features( 278 ): 
-# 	 Bacteroides Prevotella Eubacterium Faecalibacterium Alistipes ...
+#    Bacteroides Prevotella Eubacterium Faecalibacterium Alistipes ...
 # 2. Samples( 51 ): 
-# 	 MH0277 MH0087 MH0156 MH0444 MH0333 ...
+#    MH0277 MH0087 MH0156 MH0444 MH0333 ...
 # 3. Top 5 Samples data:
 # [1] 1 2 3 4 5
 ```
 
-
 Then estimating the approate numbers of cluster can implement by `estimate_k` function.
+
 ``` r
 res2 <- estimate_k(dat)
 res2
@@ -174,6 +182,7 @@ res2
 # Max CHI:  164.6422 
 # Silhouette:  0.1814455 
 ```
+
 ![](https://raw.githubusercontent.com/gongcongcong/mbOmic/master/inst/doc/verCHI.svg)
 
 Enterotype of samples validates the result of `estimate_k`.
