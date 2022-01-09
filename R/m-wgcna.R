@@ -85,8 +85,8 @@ setMethod('coExpress', 'Set', function(object, power = NULL,
         res <- res[res!='grey']
         res <- data.frame(table(res))
         names(res) <- c("Module","Size")
-        message("====> There are ", nrow(res), "modules were constructed: \n")
-        apply(res, 1, function(x) cat("====|| ", x, "\n"))
+        message("====> There are ", nrow(res), " modules were constructed: \n")
+        apply(res, 1, function(x) message("====|| ", x, "\n"))
         # structure(net$colors, MEs = net$MEs, class = 'mb.module')
         names(net$colors) <- mN
         net
