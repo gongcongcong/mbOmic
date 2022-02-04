@@ -73,11 +73,6 @@ setMethod(f = 'corr', signature = c(m='mSet', b='bSet'),
 			  registerDoParallel(cores = ncore)
                           cl <- makeCluster(ncore)
                           on.exit(stopCluster(cl))
-                          clusterEvalQ(cl,
-                                       {
-                                               library(magrittr, quietly = TRUE)
-                                               library(data.table, quietly = TRUE)
-                                       })
                           clusterExport(cl, list('m_dt','b_dt', 'cor2df'), envir = environment())
 
                           res <-
@@ -102,30 +97,30 @@ setMethod(f = 'corr', signature = c(m='mSet', b='bSet'),
 #' @param res output of corr.test
 cor2df <-
         function(res){
-                padj <- as.data.table(res$p.adj,
+                padj <- data.table::as.data.table(res$p.adj,
                                       keep.rownames = TRUE)  |>
-                        melt(id = 'rn')
+                        data.table::melt(id = 'rn')
                 padj <- padj[,
                              list(pair=interaction(padj$rn,padj$variable,sep = ' : '),
                                   padj = padj$value)
                 ]
-                p <- as.data.table(res$p,
+                p <- data.table::as.data.table(res$p,
                                    keep.rownames = TRUE) |>
-                        melt(id = 'rn')
+                        data.table::melt(id = 'rn')
                 p <- p[,
                        list(pair=interaction(p$rn,p$variable,sep = ' : '),
                             p = p$value)
                 ]
-                r <- as.data.table(res$r,
+                r <- data.table::as.data.table(res$r,
                                    keep.rownames = TRUE) |>
-                        melt(id = 'rn')
+                        data.table::melt(id = 'rn')
                 r <- r[,
                        list(pair=interaction(r$rn,r$variable,sep = ' : '),
                             rho = r$value)
                 ]
-                setkey(r,'pair')
-                setkey(p, 'pair')
-                setkey(padj, 'pair')
+                data.table::setkey(r,'pair')
+                data.table::setkey(p, 'pair')
+                data.table::setkey(padj, 'pair')
                 padj[p][r]
 
         }
