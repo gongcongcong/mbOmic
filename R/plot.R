@@ -17,8 +17,14 @@
 #'
 plot_coExpress <-
         function(net){
-                mergedColors = labels2colors(net$colors)
-                plotDendroAndColors(net$dendrograms[[1]], mergedColors[net$blockGenes[[1]]], "Module colors", dendroLabels = FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05)
+                mergedColors <- labels2colors(net$colors)
+                plotDendroAndColors(net$dendrograms[[1]],
+                                    mergedColors[net$blockGenes[[1]]],
+                                    "Module colors",
+                                    dendroLabels = FALSE,
+                                    hang = 0.03,
+                                    addGuide = TRUE,
+                                    guideHang = 0.05)
         }
 #' plot_network
 #'

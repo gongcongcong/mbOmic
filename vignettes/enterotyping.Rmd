@@ -14,34 +14,56 @@ knitr::opts_chunk$set(
 )
 ```
 
+A workflow for identifying enterotypes based on the relative abundance of gut microbiota was implemented refereed on the reports of Arumugam[^2]
+
+[^1]: Arumugam, M., Raes, J., Pelletier, E., Le Paslier, D., Yamada, T., Mende, D. R., ... & Bork, P. (2011). Enterotypes of the human gut microbiome. nature, 473(7346), 174-180.
+
 ```{r setup}
 library(mbOmic)
 library(data.table)
 ```
+
+First of all, the dataset of microbiota relative abundance was retrived from the [enterotypes weblink](http://enterotypes.org/ref_samples_abundance_MetaHIT.txt). The missing value was imputed using **KNN** by `impute` package.
 
 ```{r}
 dat <- read.delim('http://enterotypes.org/ref_samples_abundance_MetaHIT.txt')
 dat <- impute::impute.knn(as.matrix(dat), k = 100)
 dat <- as.data.frame(dat$data+0.001) 
 setDT(dat, keep.rownames = TRUE)
+dat
+```
+
+Constructe the `bSet` class and then estimate the the proper cluster number using the `estimate_k` function. The `estimate_k` function take advantage of  `Jensen-Shannon divergence` to cluster the samples and the number of clusters was optimizated by Calinski-Harabasz (CH) Index and Silhouette Coefficient. 
+
+The `estimate_k` returns `verCHI` class, a `S3` class containing a optimal cluster results, optimal number cluster, a minmum CHI, a minmum Silhouette value, and Jensen-Shannon divergence matrix. 
+
+```{r}
 dat <- bSet(b =  dat)
-rest <- read.table(system.file('extdata', 'enterotype.txt', package = 'mbOmic'))
-rest <- rest[samples(dat),]
-res2 <- estimate_k(dat)
+res <- estimate_k(dat)
+res
 ```
 
-```{r}
-table(res2$verOptCluster, rest$ET)
-```
+The proper number of cluster is 4. 
+
+Next, the `enterotyping` function was used to identify the enterotype for each cluster and it returns a 3-length list. This list contains two enterotypes matrices and a unidentified samples vector. Cluster 2, 3, and 4 was enterotype Bacteroides, Prevotella, and Ruminococcus, resepectively. 
 
 ```{r}
-ret=enterotyping(dat, 
-                 res2$verOptCluster) 
+ret=enterotyping(dat, res$verOptCluster) 
 ret
 ```
 
 
+Furthermore, this result was validated by enterotypes results given by the [enterotype website](http://enterotypes.org).
+
+```{r}
+enterotypes <- read.table(system.file('extdata', 'enterotype.txt', package = 'mbOmic'))
+enterotypes <- enterotypes[samples(dat),]
+table(res$verOptCluster, enterotypes$ET)
+```
+
+
 ## SessionInfo
+
 ```{r}
 devtools::session_info()
 ```
