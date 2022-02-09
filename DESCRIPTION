@@ -1,7 +1,7 @@
 Package: mbOmic
 Type: Package
 Title: Integrative analysis of the microbiome and metabolome
-Version: 0.99.12
+Version: 0.99.13
 Description: The mbOmic package contains a set of analysis 
     functions for microbiomics and metabolomics data, designed 
     to analyze the inter-omic correlation between microbiology

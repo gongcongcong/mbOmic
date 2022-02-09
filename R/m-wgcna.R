@@ -77,7 +77,7 @@ setMethod('coExpress', 'Set', function(object, power = NULL,
                 stop("No power detected! pls set the power parameter\n")
         }
         # id <- featureNames(mExpSet(object))
-        message("\nusing the power: ", pw, "to constructe net!\n")
+        message("\nusing the power: ", pw, " to constructe net!\n")
         message("\nTwo: Network construction and module detection was done\n")
         net <-  quiteRun(blockwiseModules(datExpr = t(dt),
                                           power = pw, ...))
