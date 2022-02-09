@@ -100,9 +100,9 @@ net <- coExpress(m,message = TRUE,threshold.d = 0.02, threshold = 0.8, power = 9
 
 Result Visualization is performed by function `plot_coExpress`.
 
-```{r}
-plot_coExpress(net = net)
-```
+# ```{r}
+# plot_coExpress(net = net)
+# ```
 
 ### Calculate the Spearman metabolite-genera correlation
 
