@@ -89,8 +89,8 @@ setMethod('coExpress', 'Set', function(object, power = NULL,
         apply(res, 1, function(x) message("====|| ", x, "\n"))
         # structure(net$colors, MEs = net$MEs, class = 'mb.module')
         names(net$colors) <- mN
-        net
-
+        message("DONE!!!\n")
+        return(net)
 })
 
 #' pickST
