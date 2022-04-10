@@ -13,7 +13,6 @@
 #' names(metabolites)[1] <- 'rn'
 #' m <- mSet(m = metabolites)
 #' net <- coExpress(m, minN = 2, power = 9, message = FALSE)
-#' plot_coExpress(net)
 #'
 plot_coExpress <-
         function(net){
