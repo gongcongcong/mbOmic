@@ -78,9 +78,11 @@ m <- clean_analytes(m, fea_num = 2)
 
 `mbOmic` can generate metabolite module by `coExpress` function. The `coExpress` function is the encapsulation of one-step network construction and module detection of `WGCNA` package. The `coExpress` function firstly pick up the soft-threshold. The `threshold.d` and `threshold` parameters are used to detect whether is $R^2$ changing and appropriate.
 
+If there are no appropriate threshold was detected and you do not set the `power` parameter, the `coExpress` will throw a error, "No power detected! pls set the power parameter". 
+
 ```{r, fig.width= 6, fig.height= 5}
 net <- try({
-  coExpress(m,message = TRUE,threshold.d = 0.02, threshold = 0.8, plot = TRUE)
+  coExpress(m,message = TRUE,threshold.d = 0.02, threshold = 0.8, plot = FALSE) 
 })
 class(net)
 ```
@@ -130,7 +132,7 @@ plot_network(net, spearm[abs(rho) >= 0.8 & p <= 0.001], interaction = FALSE)
 
 
 ```{r, fig.align='center', fig.width= 6, fig.height= 5, dpi=150}
-plot_network(net, spearm[abs(rho) >= 0.8 & p <= 0.001], seed = 123, interaction = TRUE, return =  FALSE)
+plot_network(net, spearm[abs(rho) >= 0.8 & p <= 0.001], seed = 123, interaction = TRUE, return =  TRUE)
 # visSave(tmp, file = '../inst/doc/network2.html')
 ```
 
