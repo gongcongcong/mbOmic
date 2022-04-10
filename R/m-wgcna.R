@@ -132,11 +132,11 @@ pickST <-
                         points(res, sft[res], pch = 16, col = 'darkred')
                         text(res, sft[res]-0.1, labels = res, col = 'red')
                         text(1,threshold+0.2,labels=threshold,col = 'blue')
-                        text(20,-1,labels=paste(
-                                "Threshold: ", threshold,
-                                "\ntol: ", threshold.d,
-                                sep = ''
-                        ))
+                        # text(20,-1,labels=paste(
+                        #         "Threshold: ", threshold,
+                        #         "\ntol: ", threshold.d,
+                        #         sep = ''
+                        # ))
                         abline(h = threshold, col = 'blue', lty = 2)
                 }
                 res

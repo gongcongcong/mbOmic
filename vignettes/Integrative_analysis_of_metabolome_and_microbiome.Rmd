@@ -82,7 +82,7 @@ If there are no appropriate threshold was detected and you do not set the `power
 
 ```{r, fig.width= 6, fig.height= 5}
 net <- try({
-  coExpress(m,message = TRUE,threshold.d = 0.02, threshold = 0.8, plot = FALSE) 
+  coExpress(m,message = TRUE,threshold.d = 0.02, threshold = 0.8, plot = TRUE) 
 })
 class(net)
 ```
