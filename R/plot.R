@@ -2,7 +2,7 @@
 #'
 #' Plotting the dendro of metabolites modules.
 #'
-#' @export
+
 #' @return ploting
 #' @importFrom WGCNA labels2colors plotDendroAndColors
 #' @param net output of coExpress function
