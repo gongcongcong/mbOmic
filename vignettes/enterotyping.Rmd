@@ -26,11 +26,11 @@ library(data.table)
 First of all, the dataset of microbiota relative abundance was retrived from the [enterotypes weblink](http://enterotypes.org/ref_samples_abundance_MetaHIT.txt). The missing value was imputed using **KNN** by `impute` package.
 
 ```{r}
-dat <- read.delim('http://enterotypes.org/ref_samples_abundance_MetaHIT.txt')
-dat <- impute::impute.knn(as.matrix(dat), k = 100)
-dat <- as.data.frame(dat$data+0.001) 
-setDT(dat, keep.rownames = TRUE)
-dat
+# dat <- read.delim('http://enterotypes.org/ref_samples_abundance_MetaHIT.txt')
+# dat <- impute::impute.knn(as.matrix(dat), k = 100)
+# dat <- as.data.frame(dat$data+0.001) 
+# setDT(dat, keep.rownames = TRUE)
+# dat
 ```
 
 Constructe the `bSet` class and then estimate the the proper cluster number using the `estimate_k` function. The `estimate_k` function take advantage of  `Jensen-Shannon divergence` to cluster the samples and the number of clusters was optimizated by Calinski-Harabasz (CH) Index and Silhouette Coefficient. 
@@ -38,9 +38,9 @@ Constructe the `bSet` class and then estimate the the proper cluster number usin
 The `estimate_k` returns `verCHI` class, a `S3` class containing a optimal cluster results, optimal number cluster, a minmum CHI, a minmum Silhouette value, and Jensen-Shannon divergence matrix. 
 
 ```{r}
-dat <- bSet(b =  dat)
-res <- estimate_k(dat)
-res
+# dat <- bSet(b =  dat)
+# res <- estimate_k(dat)
+# res
 ```
 
 The proper number of cluster is 4. 
@@ -48,17 +48,17 @@ The proper number of cluster is 4.
 Next, the `enterotyping` function was used to identify the enterotype for each cluster and it returns a 3-length list. This list contains two enterotypes matrices and a unidentified samples vector. Cluster 2, 3, and 4 was enterotype Bacteroides, Prevotella, and Ruminococcus, resepectively. 
 
 ```{r}
-ret=enterotyping(dat, res$verOptCluster) 
-ret
+# ret=enterotyping(dat, res$verOptCluster) 
+# ret
 ```
 
 
 Furthermore, this result was validated by enterotypes results given by the [enterotype website](http://enterotypes.org).
 
 ```{r}
-enterotypes <- read.table(system.file('extdata', 'enterotype.txt', package = 'mbOmic'))
-enterotypes <- enterotypes[samples(dat),]
-table(res$verOptCluster, enterotypes$ET)
+# enterotypes <- read.table(system.file('extdata', 'enterotype.txt', package = 'mbOmic'))
+# enterotypes <- enterotypes[samples(dat),]
+# table(res$verOptCluster, enterotypes$ET)
 ```
 
 
